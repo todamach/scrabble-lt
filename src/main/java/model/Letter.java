@@ -27,4 +27,8 @@ public class Letter {
     public void setValue(int value) {
         this.value = value;
     }
+
+    public static Letter getLetter(String letter){
+        return new Letter(letter, 0);
+    }
 }

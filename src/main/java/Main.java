@@ -4,6 +4,9 @@ import com.sun.deploy.util.ArrayUtil;
 import dawg.ModifiableDAWGMap;
 import dawg.ModifiableDAWGNode;
 import dawg.ModifiableDAWGSet;
+import model.Board;
+import model.Letter;
+import model.Tile;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -34,12 +37,17 @@ public class Main {
         rack.add("ë");
         rack.add("o");
 
-        ModifiableDAWGSet dawg  = readDAWGFromFile();
-        writeDAWGToGraphWiz(dawg);
+//        ModifiableDAWGSet dawg  = readDAWGFromFile();
+//        writeDAWGToGraphWiz(dawg);
+//
+//        ModifiableDAWGNode startNode = dawg.sourceNode;
+//        leftPart("", startNode, 1);
 
-        ModifiableDAWGNode startNode = dawg.sourceNode;
-        leftPart("", startNode, 1);
+        Board board = new Board();
+        board.setBoard(board.generateEmptyBoard());
 
+        board.getBoard()[7][7].setLetter(Letter.getLetter("d"));
+        board.findAnchors();
 
         System.out.println("Pabaiga");
     }

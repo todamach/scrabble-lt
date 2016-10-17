@@ -7,12 +7,23 @@ import java.util.List;
  * Created by harol on 10/17/2016.
  */
 public class Tile {
+
+    public static final int NONE = 0, DOUBLE_LETTER = 1, TRIPLE_LETTER = 2, DOUBLE_WORD = 3, TRIPLE_WORD = 4;
+
     private Letter letter;
     private boolean isAnchor;
     private List<Crosscheck> verticalCrosschecks = new ArrayList<>();
     private List<Crosscheck> horizontalCrosschecks = new ArrayList<>();
+    private int multiplier = NONE;
 
-    public Tile(){}
+    public Tile(){
+
+    }
+
+    public Tile(int multiplier){
+        this.multiplier = multiplier;
+        this.isAnchor = false;
+    }
 
     public Letter getLetter() {
         return letter;
@@ -44,5 +55,13 @@ public class Tile {
 
     public void setHorizontalCrosschecks(List<Crosscheck> horizontalCrosschecks) {
         this.horizontalCrosschecks = horizontalCrosschecks;
+    }
+
+    public int getMultiplier() {
+        return multiplier;
+    }
+
+    public void setMultiplier(int multiplier) {
+        this.multiplier = multiplier;
     }
 }
