@@ -6,6 +6,7 @@ import dawg.ModifiableDAWGNode;
 import dawg.ModifiableDAWGSet;
 import model.Board;
 import model.Letter;
+import model.Rack;
 import model.Tile;
 
 import java.io.*;
@@ -19,35 +20,39 @@ import java.util.stream.Stream ;
  */
 public class Main {
 
-    static String[] row = {"", "", "", "", "", "d", "", "", "", "", "", "", ""};
-    static List<String> rack = new ArrayList<>();
-    public static int anchorSquare = 4;
+    //static String[] row = {"", "", "", "", "", "d", "", "", "", "", "", "", ""};
+    static List<Letter> lettersInRack = new ArrayList<>();
+    public static int anchorSquare = 7;
+    public static int anchorRow = 6;
+    static Board board;
+    static Rack rack;
 
     public static void main(String[] args){
 
-        rack.add("p");
-        rack.add("s");
-        rack.add("a");
-        rack.add("r");
-        rack.add("t");
-        rack.add("m");
-        rack.add("o");
-        rack.add("k");
-        rack.add("e");
-        rack.add("ë");
-        rack.add("o");
+        lettersInRack.add(new Letter("p", 0));
+        lettersInRack.add(new Letter("s", 0));
+        lettersInRack.add(new Letter("r", 0));
+        lettersInRack.add(new Letter("t", 0));
+        lettersInRack.add(new Letter("m", 0));
+        lettersInRack.add(new Letter("o", 0));
+        lettersInRack.add(new Letter("k", 0));
+        lettersInRack.add(new Letter("e", 0));
+        lettersInRack.add(new Letter("ë", 0));
+        lettersInRack.add(new Letter("o", 0));
 
 //        ModifiableDAWGSet dawg  = readDAWGFromFile();
 //        writeDAWGToGraphWiz(dawg);
 //
-//        ModifiableDAWGNode startNode = dawg.sourceNode;
-//        leftPart("", startNode, 1);
+        ModifiableDAWGNode startNode = dawg.sourceNode;
+        leftPart("", startNode, 1);
 
-        Board board = new Board();
+        board = new Board();
         board.setBoard(board.generateEmptyBoard());
 
-        board.getBoard()[7][7].setLetter(Letter.getLetter("d"));
+        board.getBoard()[7][7].setLetter(Letter.getLetter("a"));
         board.findAnchors();
+
+
 
         System.out.println("Pabaiga");
     }
@@ -57,13 +62,13 @@ public class Main {
         int currentTile = anchorSquare - 1;
         String leftPart = "";
         // Jeigu iskarto pries anchorSquare yra raide, tai imam visas raides iki pradzios, ir nebeieskom daugiau jokiu left parts
-        if(!row[currentTile].equals("")){
+        if(!board.getBoard()[anchorRow][currentTile].getLetter().getLetter().equals("")){
             // gaunam stringa raidziu einanciu pries anchorSquare ir ji apverciam
             while(currentTile >= 0){
-                if(row[currentTile].equals("")){
+                if(board.getBoard()[anchorRow][currentTile].getLetter().getLetter().equals("")){
                     break;
                 }
-                leftPart += row[currentTile];
+                leftPart += board.getBoard()[anchorRow][currentTile].getLetter().getLetter();
                 currentTile--;
             }
             partialWord = new StringBuilder(leftPart).reverse().toString();
@@ -81,12 +86,13 @@ public class Main {
             if(limit > 0){
                 NavigableMap<Character, ModifiableDAWGNode> outgoingNodes = node.getOutgoingTransitions();
                 for(Character c : outgoingNodes.keySet()){
-                    if(rack.contains(c.toString())){
-                        int index = rack.indexOf(c.toString());
-                        rack.remove(index);
+                    int index;
+                    if((index = rack.contains(c.toString())) > - 1){
+                        Letter letter = rack.getLetters().get(index);
+                        rack.getLetters().remove(index);
                         ModifiableDAWGNode nextNode = outgoingNodes.get(c);
                         leftPart(partialWord + c, nextNode, limit - 1);
-                        rack.add(c.toString());
+                        rack.getLetters().add(letter);
                     }
                 }
             }
@@ -95,31 +101,32 @@ public class Main {
     }
 
     private static void extendRight(String partialWord, ModifiableDAWGNode node, int square) {
-        if(square <= row.length && Objects.equals(row[square], "")){
+        if(square <= board.getBoard()[anchorRow].length && Objects.equals(board.getBoard()[anchorRow][square].getLetter().getLetter(), "")){
             if(node.isAcceptNode()){
                 System.out.println("Legal word: " + partialWord);
             }
             NavigableMap<Character, ModifiableDAWGNode> outgoingNodes = node.getOutgoingTransitions();
             for(Character c : outgoingNodes.keySet()){
-                if(rack.contains(c.toString())){
-                    int index = rack.indexOf(c.toString());
-                    rack.remove(index);
+                int index;
+                if((index = rack.contains(c.toString())) > -1){
+                    Letter letter = rack.getLetters().get(index);
+                    rack.getLetters().remove(index);
                     ModifiableDAWGNode nextNode = outgoingNodes.get(c);
                     int nextSquare = square + 1;
                     System.out.println("Extending right with rack: " + partialWord + c);
                     extendRight(partialWord + c, nextNode, nextSquare);
-                    rack.add(c.toString());
+                    rack.getLetters().add(letter);
                 }
             }
         }else{
-            String letter = row[square];
+            Letter letter = board.getBoard()[anchorRow][square].getLetter();
             NavigableMap<Character, ModifiableDAWGNode> outgoingNodes = node.getOutgoingTransitions();
             for(Character c : outgoingNodes.keySet()){
-                if(letter.equals(c.toString())){
+                if(letter.getLetter().equals(c.toString())){
                     ModifiableDAWGNode nextNode = outgoingNodes.get(c);
                     int nextSquare = square + 1;
-                    System.out.println("Extending right with board: " + partialWord + letter);
-                    extendRight(partialWord + letter, nextNode, nextSquare);
+                    System.out.println("Extending right with board: " + partialWord + letter.getLetter());
+                    extendRight(partialWord + letter.getLetter(), nextNode, nextSquare);
                 }
             }
         }
