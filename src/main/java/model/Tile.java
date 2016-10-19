@@ -10,7 +10,7 @@ public class Tile {
 
     public static final int NONE = 0, DOUBLE_LETTER = 1, TRIPLE_LETTER = 2, DOUBLE_WORD = 3, TRIPLE_WORD = 4;
 
-    private Letter letter;
+    private Letter letter = new Letter();
     private boolean isAnchor;
     private List<Crosscheck> verticalCrosschecks = new ArrayList<>();
     private List<Crosscheck> horizontalCrosschecks = new ArrayList<>();

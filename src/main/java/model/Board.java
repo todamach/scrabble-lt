@@ -5,8 +5,8 @@ package model;
  */
 public class Board {
 
-    private final static int ROWS = 15;
-    private final static int COLS = 15;
+    public final static int ROWS = 15;
+    public final static int COLS = 15;
 
     private Tile[][] board;
 
@@ -18,38 +18,6 @@ public class Board {
 
     public void setBoard(Tile[][] board) {
         this.board = board;
-    }
-
-    public void findAnchors(){
-        for(int row = 0; row <= ROWS - 1; row++){
-            for(int col = 0; col <= COLS - 1; col++){
-                if(board[row][col].getLetter() != null){
-                    if(row > 0){
-                        if(board[row - 1][col].getLetter() == null){
-                            board[row - 1][col].setAnchor(true);
-                        }
-                    }
-
-                    if(col > 0){
-                        if(board[row][col - 1].getLetter() == null){
-                            board[row][col - 1].setAnchor(true);
-                        }
-                    }
-
-                    if(col != 14){
-                        if(board[row][col + 1].getLetter() == null){
-                            board[row][col + 1].setAnchor(true);
-                        }
-                    }
-
-                    if(row != 14){
-                        if(board[row + 1][col].getLetter() == null){
-                            board[row + 1][col].setAnchor(true);
-                        }
-                    }
-                }
-            }
-        }
     }
 
     public Tile[][] generateEmptyBoard(){
@@ -127,5 +95,29 @@ public class Board {
         board[13][9].setMultiplier(Tile.TRIPLE_LETTER);
 
         return board;
+    }
+
+    public void setTestBoard(int i) {
+        if(i == 1){
+            //  m
+            //trenkti
+            //  d
+            //  i
+            //  s
+
+            board[7][5].setLetter(Letter.getLetter("t"));
+            board[7][6].setLetter(Letter.getLetter("r"));
+            board[7][7].setLetter(Letter.getLetter("e"));
+            board[7][8].setLetter(Letter.getLetter("n"));
+            board[7][9].setLetter(Letter.getLetter("k"));
+            board[7][10].setLetter(Letter.getLetter("t"));
+            board[7][11].setLetter(Letter.getLetter("i"));
+
+            board[6][7].setLetter(Letter.getLetter("m"));
+            board[8][7].setLetter(Letter.getLetter("d"));
+            board[9][7].setLetter(Letter.getLetter("i"));
+            board[10][7].setLetter(Letter.getLetter("s"));
+        }
+
     }
 }

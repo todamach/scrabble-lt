@@ -12,6 +12,8 @@ public class Letter {
         this.value = value;
     }
 
+    public Letter(){}
+
     public String getLetter() {
         return letter;
     }
