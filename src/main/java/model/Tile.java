@@ -16,6 +16,8 @@ public class Tile {
     private List<Crosscheck> horizontalCrosschecks = new ArrayList<>();
     private int multiplier = NONE;
 
+    private boolean allHorizontalCrosschekcs;
+
     public Tile(){
 
     }
@@ -63,5 +65,29 @@ public class Tile {
 
     public void setMultiplier(int multiplier) {
         this.multiplier = multiplier;
+    }
+
+    public void addHorizontalCrosscheck(Crosscheck crosscheck){
+        horizontalCrosschecks.add(crosscheck);
+    }
+
+    public boolean horizontalCrosschecksContains(String letter){
+        if(!this.isAnchor || this.allHorizontalCrosschekcs){
+            return true;
+        }
+        for (Crosscheck crosscheck : horizontalCrosschecks) {
+            if(crosscheck.getLetter().getLetter().equals(letter)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isAllHorizontalCrosschekcs() {
+        return allHorizontalCrosschekcs;
+    }
+
+    public void setAllHorizontalCrosschekcs(boolean allHorizontalCrosschekcs) {
+        this.allHorizontalCrosschekcs = allHorizontalCrosschekcs;
     }
 }

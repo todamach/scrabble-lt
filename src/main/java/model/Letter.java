@@ -12,6 +12,10 @@ public class Letter {
         this.value = value;
     }
 
+    public Letter (String letter){
+        this.letter = letter;
+    }
+
     public Letter(){}
 
     public String getLetter() {

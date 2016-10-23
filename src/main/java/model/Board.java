@@ -10,7 +10,8 @@ public class Board {
 
     private Tile[][] board;
 
-    public Board(){}
+    public Board() {
+    }
 
     public Tile[][] getBoard() {
         return board;
@@ -20,11 +21,11 @@ public class Board {
         this.board = board;
     }
 
-    public Tile[][] generateEmptyBoard(){
+    public Tile[][] generateEmptyBoard() {
         Tile[][] board = new Tile[ROWS][COLS];
 
-        for(int row = 0; row <= ROWS - 1; row++){
-            for(int col = 0; col <= COLS - 1; col++){
+        for (int row = 0; row <= ROWS - 1; row++) {
+            for (int col = 0; col <= COLS - 1; col++) {
                 board[row][col] = new Tile(Tile.NONE);
             }
         }
@@ -98,7 +99,7 @@ public class Board {
     }
 
     public void setTestBoard(int i) {
-        if(i == 1){
+        if (i == 1) {
             //  m
             //trenkti
             //  d
@@ -117,7 +118,57 @@ public class Board {
             board[8][7].setLetter(Letter.getLetter("d"));
             board[9][7].setLetter(Letter.getLetter("i"));
             board[10][7].setLetter(Letter.getLetter("s"));
+        } else if (i == 2) {
+            //      r
+            //  m
+            //trenkti
+            //  d   k
+            //  i   i
+            //  s   a
+
+            board[7][5].setLetter(Letter.getLetter("t"));
+            board[7][6].setLetter(Letter.getLetter("r"));
+            board[7][7].setLetter(Letter.getLetter("e"));
+            board[7][8].setLetter(Letter.getLetter("n"));
+            board[7][9].setLetter(Letter.getLetter("k"));
+            board[7][10].setLetter(Letter.getLetter("t"));
+            board[7][11].setLetter(Letter.getLetter("i"));
+
+            board[6][7].setLetter(Letter.getLetter("m"));
+            board[8][7].setLetter(Letter.getLetter("d"));
+            board[9][7].setLetter(Letter.getLetter("i"));
+            board[10][7].setLetter(Letter.getLetter("s"));
+
+            board[5][11].setLetter(Letter.getLetter("r"));
+            board[8][11].setLetter(Letter.getLetter("k"));
+            board[9][11].setLetter(Letter.getLetter("i"));
+            board[10][11].setLetter(Letter.getLetter("a"));
+        }
+    }
+
+    @Override
+    public String toString() {
+        String board = "   ";
+        for (int col = 0; col <= COLS - 1; col++) {
+            board += " " + (col % 10) + " ";
+        }
+        board += "\n";
+        for (int row = 0; row <= ROWS - 1; row++) {
+            board += " " + (row % 10) + " ";
+            for (int col = 0; col <= COLS - 1; col++) {
+                Letter letter = getBoard()[row][col].getLetter();
+                Tile tile = getBoard()[row][col];
+                if(!letter.getLetter().isEmpty()){
+                    board += " " + letter.getLetter() + " ";
+                }else if(tile.isAnchor()){
+                    board += " # ";
+                }else {
+                    board += "   ";
+                }
+            }
+            board += "\n";
         }
 
+        return board;
     }
 }

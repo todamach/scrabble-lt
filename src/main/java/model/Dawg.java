@@ -32,7 +32,8 @@ public class Dawg {
                 new FileInputStream(file), "Unicode"))) {
             String line;
             while ((line = in.readLine()) != null) {
-                dawg.add(line.toLowerCase());
+                if(line.length() > 1)
+                    dawg.add(line.toLowerCase());
             }
             in.close();
         } catch (IOException e) {
