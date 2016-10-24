@@ -12,6 +12,8 @@ check final word http://tekstynas.vdu.lt/page.xhtml;jsessionid=EC93C76183F64FB0F
 
 vertical word generation
 
+evaluate crosschecks for word value
+
 # libas, kuris naudojamas grafui sudaryti ir per jį eiti (modifikuotas)
 
 https://github.com/Qualtagh/DAWG
