@@ -1,5 +1,9 @@
 package model;
 
+import dawg.ModifiableDAWGNode;
+
+import java.util.NavigableMap;
+
 /**
  * Created by harol on 10/17/2016.
  */
@@ -144,6 +148,128 @@ public class Board {
             board[9][11].setLetter(Letter.getLetter("i"));
             board[10][11].setLetter(Letter.getLetter("a"));
         }
+    }
+
+    public void findAnchors() {
+        for (int row = 0; row <= Board.ROWS - 1; row++) {
+            for (int col = 0; col <= Board.COLS - 1; col++) {
+                if (!board[row][col].getLetter().getLetter().equals("")) {
+                    if (row > 0) {
+                        if (board[row - 1][col].getLetter().getLetter().equals("")) {
+                            board[row - 1][col].setAnchor(true);
+                        }
+                    }
+
+                    if (col > 0) {
+                        if (board[row][col - 1].getLetter().getLetter().equals("")) {
+                            board[row][col - 1].setAnchor(true);
+                        }
+                    }
+
+                    if (col != 14) {
+                        if (board[row][col + 1].getLetter().getLetter().equals("")) {
+                            board[row][col + 1].setAnchor(true);
+                        }
+                    }
+
+                    if (row != 14) {
+                        if (board[row + 1][col].getLetter().getLetter().equals("")) {
+                            board[row + 1][col].setAnchor(true);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public void findCrosschecks(Dawg dawg) {
+        // kolkas tik horizontal
+        // paimam top part, paimam bottom part, ir tikrinam kas tinka tarp ju pagal grafa
+        for (int row = 0; row <= Board.ROWS - 1; row++) {
+            for (int col = 0; col <= Board.COLS - 1; col++) {
+                if (board[row][col].isAnchor()) {
+                    Tile tile = board[row][col];
+                    if(board[row - 1][col].getLetter().getLetter().isEmpty() &&
+                            board[row + 1][col].getLetter().getLetter().isEmpty()){
+                        // jeigu langeliai virs ir po tile yra tusti, tai visi crosschekai galimi
+                        tile.setAllHorizontalCrosschecks(true);
+                    }else{
+                        //System.out.println("Find crosscheck for " + row + " " + col);
+                        String topPart = "";
+                        int currentRow = row - 1;
+
+                        //randam top part, jeigu ji yra
+                        if (row > 0) {
+                            if (!board[row - 1][col].getLetter().getLetter().isEmpty()) {
+                                while (currentRow >= 0) {
+                                    if (board[currentRow][col].getLetter().getLetter().equals("")) {
+                                        break;
+                                    }
+                                    topPart += board[currentRow][col].getLetter().getLetter();
+                                    currentRow--;
+                                }
+                                topPart = new StringBuilder(topPart).reverse().toString();
+                            }
+                        }
+
+                        // randam top part node seka grafe
+                        ModifiableDAWGNode nextNode = dawg.getDawg().sourceNode;
+                        for (int i = 0; i < topPart.length(); i++) {
+                            char c = topPart.charAt(i);
+                            nextNode = nextNode.getOutgoingTransitions().get(c);
+                        }
+
+                        String bottomPart = "";
+
+                        if(nextNode != null){
+                            NavigableMap<Character, ModifiableDAWGNode> possibleChrosscheckLetters = nextNode.getOutgoingTransitions();
+                            for (Character c : possibleChrosscheckLetters.keySet()) {
+                                ModifiableDAWGNode bottomNode = possibleChrosscheckLetters.get(c);
+                                currentRow = row + 1;
+                                bottomPart = "";
+                                boolean foundLastNode = true;
+                                while (currentRow <= 14 && !board[currentRow][col].getLetter().getLetter().isEmpty()) {
+                                    Character bottomTileChar = board[currentRow][col].getLetter().getLetter().charAt(0);
+                                    NavigableMap<Character, ModifiableDAWGNode> bottomNodeTransitions = bottomNode.getOutgoingTransitions();
+                                    if(bottomNodeTransitions.size() == 0){
+                                        foundLastNode = false;
+                                        break;
+                                    }
+                                    bottomNode = bottomNodeTransitions.get(bottomTileChar);
+                                    if(bottomNode == null){
+                                        foundLastNode = false;
+                                        break;
+                                    }
+                                    // eit iki apacios, gal visai neit, ir tikrint ar apacia yra accepted node.
+                                    bottomPart += bottomTileChar;
+                                    currentRow++;
+                                }
+
+                                if(foundLastNode && bottomNode != null && bottomNode.isAcceptNode()){
+                                    //System.out.println("tinka crosschekas: " + c);
+                                    String crosscheckWord = topPart + c + bottomPart;
+                                    //TODO: su crosscheku saugot ir zodi
+                                    Crosscheck crosscheck = new Crosscheck(crosscheckWord, new Letter(c.toString()));
+                                    String crosscheckValueString = topPart + bottomPart;
+                                    crosscheck.setValue(getCrosscheckValueFromString(crosscheckValueString));
+                                    tile.addHorizontalCrosscheck(crosscheck, String.valueOf(c));
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private int getCrosscheckValueFromString(String crosscheckValueString) {
+        int value = 0;
+        for (int i = 0; i < crosscheckValueString.length(); i++){
+            char c = crosscheckValueString.charAt(i);
+            value += Util.Util.getLetterValue(String.valueOf(c));
+        }
+
+        return value;
     }
 
     @Override

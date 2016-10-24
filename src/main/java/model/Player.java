@@ -1,18 +1,35 @@
 package model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by harol on 10/23/2016.
  */
 public class Player {
+
+    static private Comparator<LegalWord> descWordValue;
+
     String name;
     Rack rack;
     List<LegalWord> legalWords = new ArrayList<>();
 
     public Player(){
 
+    }
+
+    // We initialize static variables inside a static block.
+    static {
+        descWordValue = new Comparator<LegalWord>(){
+            @Override
+            public int compare(LegalWord l1, LegalWord l2){
+                // Java 7 has an Integer#compare function
+                return Integer.compare(l2.getWordValue(), l1.getWordValue());
+            }
+        };
+    }
+
+    public void sortLegalWordsByValue(){
+        Collections.sort(legalWords, descWordValue);
     }
 
     public String getName() {

@@ -56,12 +56,12 @@ public class Main {
 
 
         Game game = new Game();
-        game.setBoard(board);
         game.addPlayer(player);
-        game.findAnchors();
-        System.out.println(game.getBoard());
-        game.findCrosschecks();
 
+        board.findAnchors();
+        board.findCrosschecks(game.getDawg());
+        game.setBoard(board);
+        System.out.println(game.getBoard().toString());
 
         ModifiableDAWGNode startNode = game.getDawg().getDawg().sourceNode;
 
@@ -76,6 +76,7 @@ public class Main {
             }
         }
 
+        player.sortLegalWordsByValue();
 
         System.out.println("Pabaiga");
     }
@@ -103,10 +104,10 @@ public class Main {
                 nextNode = nextNode.getOutgoingTransitions().get(c);
             }
             //System.out.println("Left part: " + partialWord);
-            extendRight(partialWord, nextNode, anchorSquare);
+            extendRight(partialWord, nextNode, anchorSquare, partialWord.length());
         } else {
             //System.out.println("Left part: " + partialWord);
-            extendRight(partialWord, node, anchorSquare);
+            extendRight(partialWord, node, anchorSquare, partialWord.length());
             if (limit > 0) {
                 NavigableMap<Character, ModifiableDAWGNode> outgoingNodes = node.getOutgoingTransitions();
                 for (Character c : outgoingNodes.keySet()) {
@@ -125,14 +126,11 @@ public class Main {
         }
     }
 
-    private static void extendRight(String partialWord, ModifiableDAWGNode node, int square) {
+    private static void extendRight(String partialWord, ModifiableDAWGNode node, int square, int leftPartLength) {
         if (square > anchorSquare && node.isAcceptNode()) {
-            LegalWord legalWord = new LegalWord();
-            legalWord.setAnchorRow(anchorRow);
-            legalWord.setAnchorSquare(anchorSquare);
-            legalWord.setWord(partialWord);
+            LegalWord legalWord = new LegalWord(anchorSquare, anchorRow, partialWord, leftPartLength, board);
             player.addLegalWord(legalWord);
-            System.out.println("Legal word: " + partialWord);
+            System.out.println("Legal word: " + legalWord);
         }
         if (square < board.getBoard()[anchorRow].length) {
             Tile currentTile = board.getBoard()[anchorRow][square];
@@ -147,7 +145,7 @@ public class Main {
                             ModifiableDAWGNode nextNode = outgoingNodes.get(c);
                             int nextSquare = square + 1;
                             //System.out.println("Extending right with rack: " + partialWord + c);
-                            extendRight(partialWord + c, nextNode, nextSquare);
+                            extendRight(partialWord + c, nextNode, nextSquare, leftPartLength);
                             player.getRack().getLetters().add(letter);
                         }
                     }
@@ -161,7 +159,7 @@ public class Main {
                             ModifiableDAWGNode nextNode = outgoingNodes.get(c);
                             int nextSquare = square + 1;
                             //System.out.println("Extending right with board: " + partialWord + letter.getLetter());
-                            extendRight(partialWord + letter.getLetter(), nextNode, nextSquare);
+                            extendRight(partialWord + letter.getLetter(), nextNode, nextSquare, leftPartLength);
                         }
                     }
                 }

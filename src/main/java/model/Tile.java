@@ -1,7 +1,9 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by harol on 10/17/2016.
@@ -13,10 +15,10 @@ public class Tile {
     private Letter letter = new Letter();
     private boolean isAnchor;
     private List<Crosscheck> verticalCrosschecks = new ArrayList<>();
-    private List<Crosscheck> horizontalCrosschecks = new ArrayList<>();
+    private Map<String, Crosscheck> horizontalCrosschecks = new HashMap<>();
     private int multiplier = NONE;
 
-    private boolean allHorizontalCrosschekcs;
+    private boolean allHorizontalCrosschecks;
 
     public Tile(){
 
@@ -51,11 +53,11 @@ public class Tile {
         this.verticalCrosschecks = verticalCrosschecks;
     }
 
-    public List<Crosscheck> getHorizontalCrosschecks() {
+    public Map<String, Crosscheck> getHorizontalCrosschecks() {
         return horizontalCrosschecks;
     }
 
-    public void setHorizontalCrosschecks(List<Crosscheck> horizontalCrosschecks) {
+    public void setHorizontalCrosschecks(Map<String, Crosscheck> horizontalCrosschecks) {
         this.horizontalCrosschecks = horizontalCrosschecks;
     }
 
@@ -67,27 +69,23 @@ public class Tile {
         this.multiplier = multiplier;
     }
 
-    public void addHorizontalCrosscheck(Crosscheck crosscheck){
-        horizontalCrosschecks.add(crosscheck);
+    public void addHorizontalCrosscheck(Crosscheck crosscheck, String letter){
+        horizontalCrosschecks.put(letter,crosscheck);
     }
 
     public boolean horizontalCrosschecksContains(String letter){
-        if(!this.isAnchor || this.allHorizontalCrosschekcs){
+        if(!this.isAnchor || this.allHorizontalCrosschecks){
             return true;
         }
-        for (Crosscheck crosscheck : horizontalCrosschecks) {
-            if(crosscheck.getLetter().getLetter().equals(letter)){
-                return true;
-            }
-        }
-        return false;
+
+        return horizontalCrosschecks.get(letter) != null;
     }
 
-    public boolean isAllHorizontalCrosschekcs() {
-        return allHorizontalCrosschekcs;
+    public boolean isAllHorizontalCrosschecks() {
+        return allHorizontalCrosschecks;
     }
 
-    public void setAllHorizontalCrosschekcs(boolean allHorizontalCrosschekcs) {
-        this.allHorizontalCrosschekcs = allHorizontalCrosschekcs;
+    public void setAllHorizontalCrosschecks(boolean allHorizontalCrosschecks) {
+        this.allHorizontalCrosschecks = allHorizontalCrosschecks;
     }
 }
