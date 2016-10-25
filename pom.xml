@@ -28,13 +28,19 @@
         </repository>
     </repositories>
 
-    <!--<dependencies>-->
-        <!--<dependency>-->
-            <!--<groupId>com.github.Qualtagh</groupId>-->
-            <!--<artifactId>DAWG</artifactId>-->
-            <!--<version>693daaa70d96830b317c3792ea413e3541f8bab7</version>-->
-        <!--</dependency>-->
-    <!--</dependencies>-->
+    <dependencies>
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>3.4.1</version>
+        </dependency>
+        <dependency>
+            <!-- jsoup HTML parser library @ http://jsoup.org/ -->
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>1.10.1</version>
+        </dependency>
+    </dependencies>
 
 
 </project>

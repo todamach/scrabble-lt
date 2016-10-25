@@ -297,4 +297,16 @@ public class Board {
 
         return board;
     }
+
+    public int findLimit(int anchorRow, int anchorSquare, Rack rack) {
+        int limit = -1;
+        while(anchorSquare >= 0 && board[anchorRow][anchorSquare].getLetter().getLetter().isEmpty()){
+            limit++;
+            anchorSquare--;
+        }
+        if(limit > rack.getLetters().size()){
+           return rack.getLetters().size();
+        }
+        return limit;
+    }
 }

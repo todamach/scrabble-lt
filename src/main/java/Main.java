@@ -71,7 +71,7 @@ public class Main {
                 anchorSquare = col;
                 if (board.getBoard()[row][col].isAnchor()) {
                     System.out.println("row: " + row + " col: " + col + "##################################################################################################");
-                    leftPart("", startNode, col);
+                    leftPart("", startNode, board.findLimit(anchorRow, anchorSquare, player.getRack()));
                 }
             }
         }
@@ -128,9 +128,18 @@ public class Main {
 
     private static void extendRight(String partialWord, ModifiableDAWGNode node, int square, int leftPartLength) {
         if (square > anchorSquare && node.isAcceptNode()) {
-            LegalWord legalWord = new LegalWord(anchorSquare, anchorRow, partialWord, leftPartLength, board);
-            player.addLegalWord(legalWord);
-            System.out.println("Legal word: " + legalWord);
+            if(square < board.getBoard()[anchorRow].length - 1){
+                Tile nextTile = board.getBoard()[anchorRow][square];
+                if(nextTile.getLetter().getLetter().isEmpty()){
+                    LegalWord legalWord = new LegalWord(anchorSquare, anchorRow, partialWord, leftPartLength, board);
+                    player.addLegalWord(legalWord);
+                    System.out.println("Legal word: " + legalWord);
+                }
+            }else{
+                LegalWord legalWord = new LegalWord(anchorSquare, anchorRow, partialWord, leftPartLength, board);
+                player.addLegalWord(legalWord);
+                System.out.println("Legal word: " + legalWord);
+            }
         }
         if (square < board.getBoard()[anchorRow].length) {
             Tile currentTile = board.getBoard()[anchorRow][square];
