@@ -9,20 +9,43 @@ import java.util.NavigableMap;
  */
 public class Board {
 
+    public final static int VERTICAL = 1;
+    public final static int HORIZONTAL = 0;
+
     public final static int ROWS = 15;
     public final static int COLS = 15;
 
-    private Tile[][] board;
+    private Tile[][] horizontalBoard;
+    private Tile[][] verticalBoard = new Tile[ROWS][COLS];
 
     public Board() {
+        setHorizontalBoard(generateEmptyBoard());
+        generateVerticalBoard();
     }
 
-    public Tile[][] getBoard() {
-        return board;
+    public void generateVerticalBoard(){
+        for(int i = 0; i < ROWS; i++){
+            for(int j = 0; j < COLS; j++){
+                verticalBoard[j][i] = new Tile();
+                verticalBoard[j][i] = horizontalBoard[i][j];
+            }
+        }
     }
 
-    public void setBoard(Tile[][] board) {
-        this.board = board;
+    public Tile[][] getHorizontalBoard() {
+        return horizontalBoard;
+    }
+
+    public void setHorizontalBoard(Tile[][] horizontalBoard) {
+        this.horizontalBoard = horizontalBoard;
+    }
+
+    public Tile[][] getVerticalBoard() {
+        return verticalBoard;
+    }
+
+    public void setVerticalBoard(Tile[][] verticalBoard) {
+        this.verticalBoard = verticalBoard;
     }
 
     public Tile[][] generateEmptyBoard() {
@@ -73,7 +96,7 @@ public class Board {
         board[2][2].setMultiplier(Tile.DOUBLE_WORD);
         board[2][12].setMultiplier(Tile.DOUBLE_WORD);
         board[3][3].setMultiplier(Tile.DOUBLE_WORD);
-        board[2][11].setMultiplier(Tile.DOUBLE_WORD);
+        board[3][11].setMultiplier(Tile.DOUBLE_WORD);
         board[4][4].setMultiplier(Tile.DOUBLE_WORD);
         board[4][10].setMultiplier(Tile.DOUBLE_WORD);
         board[7][7].setMultiplier(Tile.DOUBLE_WORD);
@@ -110,18 +133,18 @@ public class Board {
             //  i
             //  s
 
-            board[7][5].setLetter(Letter.getLetter("t"));
-            board[7][6].setLetter(Letter.getLetter("r"));
-            board[7][7].setLetter(Letter.getLetter("e"));
-            board[7][8].setLetter(Letter.getLetter("n"));
-            board[7][9].setLetter(Letter.getLetter("k"));
-            board[7][10].setLetter(Letter.getLetter("t"));
-            board[7][11].setLetter(Letter.getLetter("i"));
+            horizontalBoard[7][5].setLetter(Letter.getLetter("t"));
+            horizontalBoard[7][6].setLetter(Letter.getLetter("r"));
+            horizontalBoard[7][7].setLetter(Letter.getLetter("e"));
+            horizontalBoard[7][8].setLetter(Letter.getLetter("n"));
+            horizontalBoard[7][9].setLetter(Letter.getLetter("k"));
+            horizontalBoard[7][10].setLetter(Letter.getLetter("t"));
+            horizontalBoard[7][11].setLetter(Letter.getLetter("i"));
 
-            board[6][7].setLetter(Letter.getLetter("m"));
-            board[8][7].setLetter(Letter.getLetter("d"));
-            board[9][7].setLetter(Letter.getLetter("i"));
-            board[10][7].setLetter(Letter.getLetter("s"));
+            horizontalBoard[6][7].setLetter(Letter.getLetter("m"));
+            horizontalBoard[8][7].setLetter(Letter.getLetter("d"));
+            horizontalBoard[9][7].setLetter(Letter.getLetter("i"));
+            horizontalBoard[10][7].setLetter(Letter.getLetter("s"));
         } else if (i == 2) {
             //      r
             //  m
@@ -130,51 +153,51 @@ public class Board {
             //  i   i
             //  s   a
 
-            board[7][5].setLetter(Letter.getLetter("t"));
-            board[7][6].setLetter(Letter.getLetter("r"));
-            board[7][7].setLetter(Letter.getLetter("e"));
-            board[7][8].setLetter(Letter.getLetter("n"));
-            board[7][9].setLetter(Letter.getLetter("k"));
-            board[7][10].setLetter(Letter.getLetter("t"));
-            board[7][11].setLetter(Letter.getLetter("i"));
+            horizontalBoard[7][5].setLetter(Letter.getLetter("t"));
+            horizontalBoard[7][6].setLetter(Letter.getLetter("r"));
+            horizontalBoard[7][7].setLetter(Letter.getLetter("e"));
+            horizontalBoard[7][8].setLetter(Letter.getLetter("n"));
+            horizontalBoard[7][9].setLetter(Letter.getLetter("k"));
+            horizontalBoard[7][10].setLetter(Letter.getLetter("t"));
+            horizontalBoard[7][11].setLetter(Letter.getLetter("i"));
 
-            board[6][7].setLetter(Letter.getLetter("m"));
-            board[8][7].setLetter(Letter.getLetter("d"));
-            board[9][7].setLetter(Letter.getLetter("i"));
-            board[10][7].setLetter(Letter.getLetter("s"));
+            horizontalBoard[6][7].setLetter(Letter.getLetter("m"));
+            horizontalBoard[8][7].setLetter(Letter.getLetter("d"));
+            horizontalBoard[9][7].setLetter(Letter.getLetter("i"));
+            horizontalBoard[10][7].setLetter(Letter.getLetter("s"));
 
-            board[5][11].setLetter(Letter.getLetter("r"));
-            board[8][11].setLetter(Letter.getLetter("k"));
-            board[9][11].setLetter(Letter.getLetter("i"));
-            board[10][11].setLetter(Letter.getLetter("a"));
+            horizontalBoard[5][11].setLetter(Letter.getLetter("r"));
+            horizontalBoard[8][11].setLetter(Letter.getLetter("k"));
+            horizontalBoard[9][11].setLetter(Letter.getLetter("i"));
+            horizontalBoard[10][11].setLetter(Letter.getLetter("a"));
         }
     }
 
     public void findAnchors() {
         for (int row = 0; row <= Board.ROWS - 1; row++) {
             for (int col = 0; col <= Board.COLS - 1; col++) {
-                if (!board[row][col].getLetter().getLetter().equals("")) {
+                if (!horizontalBoard[row][col].getLetter().getLetter().equals("")) {
                     if (row > 0) {
-                        if (board[row - 1][col].getLetter().getLetter().equals("")) {
-                            board[row - 1][col].setAnchor(true);
+                        if (horizontalBoard[row - 1][col].getLetter().getLetter().equals("")) {
+                            horizontalBoard[row - 1][col].setAnchor(true);
                         }
                     }
 
                     if (col > 0) {
-                        if (board[row][col - 1].getLetter().getLetter().equals("")) {
-                            board[row][col - 1].setAnchor(true);
+                        if (horizontalBoard[row][col - 1].getLetter().getLetter().equals("")) {
+                            horizontalBoard[row][col - 1].setAnchor(true);
                         }
                     }
 
                     if (col != 14) {
-                        if (board[row][col + 1].getLetter().getLetter().equals("")) {
-                            board[row][col + 1].setAnchor(true);
+                        if (horizontalBoard[row][col + 1].getLetter().getLetter().equals("")) {
+                            horizontalBoard[row][col + 1].setAnchor(true);
                         }
                     }
 
                     if (row != 14) {
-                        if (board[row + 1][col].getLetter().getLetter().equals("")) {
-                            board[row + 1][col].setAnchor(true);
+                        if (horizontalBoard[row + 1][col].getLetter().getLetter().equals("")) {
+                            horizontalBoard[row + 1][col].setAnchor(true);
                         }
                     }
                 }
@@ -183,8 +206,12 @@ public class Board {
     }
 
     public void findCrosschecks(Dawg dawg) {
-        // kolkas tik horizontal
-        // paimam top part, paimam bottom part, ir tikrinam kas tinka tarp ju pagal grafa
+        findCrosschecks(dawg, horizontalBoard, HORIZONTAL);
+        findCrosschecks(dawg, verticalBoard, VERTICAL);
+
+    }
+
+    private void findCrosschecks(Dawg dawg, Tile[][] board, int orientation){
         for (int row = 0; row <= Board.ROWS - 1; row++) {
             for (int col = 0; col <= Board.COLS - 1; col++) {
                 if (board[row][col].isAnchor()) {
@@ -192,7 +219,7 @@ public class Board {
                     if(board[row - 1][col].getLetter().getLetter().isEmpty() &&
                             board[row + 1][col].getLetter().getLetter().isEmpty()){
                         // jeigu langeliai virs ir po tile yra tusti, tai visi crosschekai galimi
-                        tile.setAllHorizontalCrosschecks(true);
+                        tile.setAllCrosschecks(true, orientation);
                     }else{
                         //System.out.println("Find crosscheck for " + row + " " + col);
                         String topPart = "";
@@ -252,7 +279,12 @@ public class Board {
                                     Crosscheck crosscheck = new Crosscheck(crosscheckWord, new Letter(c.toString()));
                                     String crosscheckValueString = topPart + bottomPart;
                                     crosscheck.setValue(getCrosscheckValueFromString(crosscheckValueString));
-                                    tile.addHorizontalCrosscheck(crosscheck, String.valueOf(c));
+                                    if(orientation == HORIZONTAL){
+                                        tile.addVerticalCrosscheck(crosscheck, String.valueOf(c));
+                                    }else if(orientation == VERTICAL){
+                                        tile.addHorizontalCrosscheck(crosscheck, String.valueOf(c));
+                                    }
+
                                 }
                             }
                         }
@@ -272,6 +304,66 @@ public class Board {
         return value;
     }
 
+    public static String printBoardMulti(Tile[][] board) {
+        String boardString = "   ";
+        for (int col = 0; col <= COLS - 1; col++) {
+            boardString += " " + (col % 10) + " ";
+        }
+        boardString += "\n";
+        for (int row = 0; row <= ROWS - 1; row++) {
+            boardString += " " + (row % 10) + " ";
+            for (int col = 0; col <= COLS - 1; col++) {
+                Letter letter = board[row][col].getLetter();
+                Tile tile = board[row][col];
+                switch(tile.getMultiplier()){
+                    case Tile.DOUBLE_LETTER:
+                        boardString += " " + "A" + " ";
+                        break;
+                    case Tile.TRIPLE_LETTER:
+                        boardString += " " + "B" + " ";
+                        break;
+                    case Tile.DOUBLE_WORD:
+                        boardString += " " + "C" + " ";
+                        break;
+                    case Tile.TRIPLE_WORD:
+                        boardString += " " + "D" + " ";
+                        break;
+                    default:
+                        boardString += " " + " " + " ";
+                        break;
+                }
+            }
+            boardString += "\n";
+        }
+
+        return boardString;
+    }
+
+    public static String printBoardLetters(Tile[][] board) {
+        String boardString = "   ";
+        for (int col = 0; col <= COLS - 1; col++) {
+            boardString += " " + (col % 10) + " ";
+        }
+        boardString += "\n";
+        for (int row = 0; row <= ROWS - 1; row++) {
+            boardString += " " + (row % 10) + " ";
+            for (int col = 0; col <= COLS - 1; col++) {
+                Letter letter = board[row][col].getLetter();
+                Tile tile = board[row][col];
+                if(!letter.getLetter().isEmpty()){
+                    boardString += " " + letter.getLetter() + " ";
+                }else if(tile.isAnchor()){
+                    boardString += " # ";
+                }else {
+                    boardString += "   ";
+                }
+            }
+            boardString += "\n";
+        }
+
+        return boardString;
+    }
+
     @Override
     public String toString() {
         String board = "   ";
@@ -282,8 +374,8 @@ public class Board {
         for (int row = 0; row <= ROWS - 1; row++) {
             board += " " + (row % 10) + " ";
             for (int col = 0; col <= COLS - 1; col++) {
-                Letter letter = getBoard()[row][col].getLetter();
-                Tile tile = getBoard()[row][col];
+                Letter letter = getHorizontalBoard()[row][col].getLetter();
+                Tile tile = getHorizontalBoard()[row][col];
                 if(!letter.getLetter().isEmpty()){
                     board += " " + letter.getLetter() + " ";
                 }else if(tile.isAnchor()){
@@ -298,7 +390,7 @@ public class Board {
         return board;
     }
 
-    public int findLimit(int anchorRow, int anchorSquare, Rack rack) {
+    public int findLimit(Tile[][] board, int anchorRow, int anchorSquare, Rack rack) {
         int limit = -1;
         while(anchorSquare >= 0 && board[anchorRow][anchorSquare].getLetter().getLetter().isEmpty()){
             limit++;

@@ -14,26 +14,28 @@ public class LegalWord {
     List<String> wordsToCrosscheck = new ArrayList<>();
     int leftPartLength;
     int wordValue;
+    int orientation;
 
     public LegalWord(){}
 
-    public LegalWord(int anchorSquare, int anchorRow, String partialWord, int leftPartLength, Board board) {
+    public LegalWord(int anchorSquare, int anchorRow, String partialWord, int leftPartLength, Tile[][] board, int orientation) {
         this.anchorRow = anchorRow;
         this.anchorSquare = anchorSquare;
         this.word = partialWord;
         this.leftPartLength = leftPartLength;
+        this.orientation = orientation;
         this.wordValue = calculateWordValue(board);
 
         findCrosschecks(board);
     }
 
-    private int calculateWordValue(Board board){
+    private int calculateWordValue(Tile[][] board){
         int currentCol = anchorSquare - leftPartLength;
         int totalValue = 0;
         int tripleWord = 0;
         int doubleWord = 0;
         for(char c : word.toCharArray()){
-            Tile tile = board.getBoard()[anchorRow][currentCol];
+            Tile tile = board[anchorRow][currentCol];
             int value = Util.Util.getLetterValue(String.valueOf(c));
             switch(tile.getMultiplier()){
                 case Tile.DOUBLE_LETTER:
@@ -66,13 +68,13 @@ public class LegalWord {
         return totalValue;
     }
 
-    private void findCrosschecks(Board board) {
+    private void findCrosschecks(Tile[][] board) {
         int currentCol = anchorSquare - leftPartLength;
 
         for(char c : word.toCharArray()){
             if(currentCol != anchorSquare){
-                Tile tile = board.getBoard()[anchorRow][currentCol];
-                String crosscheckWord = findCrosscheckWord(tile.getHorizontalCrosschecks(), c);
+                Tile tile = board[anchorRow][currentCol];
+                String crosscheckWord = findCrosscheckWord(tile.getCrosschecks(orientation), c);
 
                 if(!crosscheckWord.isEmpty())
                     this.wordsToCrosscheck.add(crosscheckWord);

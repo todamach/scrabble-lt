@@ -11,7 +11,8 @@ public class Player {
 
     String name;
     Rack rack;
-    List<LegalWord> legalWords = new ArrayList<>();
+    List<LegalWord> legalWordsHorizontal = new ArrayList<>();
+    List<LegalWord> legalWordsVertical = new ArrayList<>();
 
     public Player(){
 
@@ -29,7 +30,8 @@ public class Player {
     }
 
     public void sortLegalWordsByValue(){
-        Collections.sort(legalWords, descWordValue);
+        Collections.sort(legalWordsHorizontal, descWordValue);
+        Collections.sort(legalWordsVertical, descWordValue);
     }
 
     public String getName() {
@@ -48,15 +50,20 @@ public class Player {
         this.rack = rack;
     }
 
-    public List<LegalWord> getLegalWords() {
-        return legalWords;
+    public List<LegalWord> getLegalWordsHorizontal() {
+        return legalWordsHorizontal;
     }
 
-    public void setLegalWords(List<LegalWord> legalWords) {
-        this.legalWords = legalWords;
+    public void setLegalWordsHorizontal(List<LegalWord> legalWords) {
+        this.legalWordsVertical = legalWords;
     }
 
-    public void addLegalWord(LegalWord legalWord){
-        this.legalWords.add(legalWord);
+    public void addLegalWord(LegalWord legalWord, int orientation){
+        if(orientation == Board.HORIZONTAL){
+            this.legalWordsHorizontal.add(legalWord);
+        }else if(orientation == Board.VERTICAL){
+            this.legalWordsVertical.add(legalWord);
+        }
+
     }
 }

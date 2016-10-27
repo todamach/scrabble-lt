@@ -1,16 +1,11 @@
 
 
-import com.sun.deploy.util.ArrayUtil;
-import dawg.ModifiableDAWGMap;
 import dawg.ModifiableDAWGNode;
 import dawg.ModifiableDAWGSet;
 import model.*;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
-import java.util.stream.Stream;
 
 /**
  * Created by harol on 10/11/2016.
@@ -51,9 +46,12 @@ public class Main {
         player.setRack(rack);
 
         board = new Board();
-        board.setBoard(board.generateEmptyBoard());
         board.setTestBoard(2);
 
+        System.out.println("Horizontal");
+        System.out.println(Board.printBoardLetters(board.getHorizontalBoard()));
+        System.out.println("Vertical");
+        System.out.println(Board.printBoardLetters(board.getVerticalBoard()));
 
         Game game = new Game();
         game.addPlayer(player);
@@ -63,117 +61,11 @@ public class Main {
         game.setBoard(board);
         System.out.println(game.getBoard().toString());
 
-        ModifiableDAWGNode startNode = game.getDawg().getDawg().sourceNode;
 
-        for (int row = 0; row <= Board.ROWS - 1; row++) {
-            anchorRow = row;
-            for (int col = 0; col <= Board.COLS - 1; col++) {
-                anchorSquare = col;
-                if (board.getBoard()[row][col].isAnchor()) {
-                    System.out.println("row: " + row + " col: " + col + "##################################################################################################");
-                    leftPart("", startNode, board.findLimit(anchorRow, anchorSquare, player.getRack()));
-                }
-            }
-        }
-
+        game.generateMoves();
         player.sortLegalWordsByValue();
 
         System.out.println("Pabaiga");
-    }
-
-    private static void leftPart(String partialWord, ModifiableDAWGNode node, int limit) {
-
-        int currentCol = anchorSquare - 1;
-        String leftPart = "";
-        // Jeigu iskarto pries anchorSquare yra raide, tai imam visas raides iki pradzios, ir nebeieskom daugiau jokiu left parts
-        Tile currentTile = board.getBoard()[anchorRow][currentCol];
-        if (!currentTile.getLetter().getLetter().equals("")) {
-            // gaunam stringa raidziu einanciu pries anchorSquare ir ji apverciam
-            while (currentCol >= 0) {
-                if (board.getBoard()[anchorRow][currentCol].getLetter().getLetter().equals("")) {
-                    break;
-                }
-                leftPart += board.getBoard()[anchorRow][currentCol].getLetter().getLetter();
-                currentCol--;
-            }
-            partialWord = new StringBuilder(leftPart).reverse().toString();
-            // gaunam to stringo paskutini node grafe
-            ModifiableDAWGNode nextNode = node;
-            for (int i = 0; i < partialWord.length(); i++) {
-                char c = partialWord.charAt(i);
-                nextNode = nextNode.getOutgoingTransitions().get(c);
-            }
-            //System.out.println("Left part: " + partialWord);
-            extendRight(partialWord, nextNode, anchorSquare, partialWord.length());
-        } else {
-            //System.out.println("Left part: " + partialWord);
-            extendRight(partialWord, node, anchorSquare, partialWord.length());
-            if (limit > 0) {
-                NavigableMap<Character, ModifiableDAWGNode> outgoingNodes = node.getOutgoingTransitions();
-                for (Character c : outgoingNodes.keySet()) {
-                    if (currentTile.horizontalCrosschecksContains(String.valueOf(c))) {
-                        int index;
-                        if ((index = player.getRack().contains(c.toString())) > -1) {
-                            Letter letter = player.getRack().getLetters().get(index);
-                            player.getRack().getLetters().remove(index);
-                            ModifiableDAWGNode nextNode = outgoingNodes.get(c);
-                            leftPart(partialWord + c, nextNode, limit - 1);
-                            player.getRack().getLetters().add(letter);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private static void extendRight(String partialWord, ModifiableDAWGNode node, int square, int leftPartLength) {
-        if (square > anchorSquare && node.isAcceptNode()) {
-            if(square < board.getBoard()[anchorRow].length - 1){
-                Tile nextTile = board.getBoard()[anchorRow][square];
-                if(nextTile.getLetter().getLetter().isEmpty()){
-                    LegalWord legalWord = new LegalWord(anchorSquare, anchorRow, partialWord, leftPartLength, board);
-                    player.addLegalWord(legalWord);
-                    System.out.println("Legal word: " + legalWord);
-                }
-            }else{
-                LegalWord legalWord = new LegalWord(anchorSquare, anchorRow, partialWord, leftPartLength, board);
-                player.addLegalWord(legalWord);
-                System.out.println("Legal word: " + legalWord);
-            }
-        }
-        if (square < board.getBoard()[anchorRow].length) {
-            Tile currentTile = board.getBoard()[anchorRow][square];
-            if (currentTile.getLetter().getLetter().isEmpty()) {
-                NavigableMap<Character, ModifiableDAWGNode> outgoingNodes = node.getOutgoingTransitions();
-                for (Character c : outgoingNodes.keySet()) {
-                    if (currentTile.horizontalCrosschecksContains(String.valueOf(c))) {
-                        int index;
-                        if ((index = player.getRack().contains(c.toString())) > -1) {
-                            Letter letter = player.getRack().getLetters().get(index);
-                            player.getRack().getLetters().remove(index);
-                            ModifiableDAWGNode nextNode = outgoingNodes.get(c);
-                            int nextSquare = square + 1;
-                            //System.out.println("Extending right with rack: " + partialWord + c);
-                            extendRight(partialWord + c, nextNode, nextSquare, leftPartLength);
-                            player.getRack().getLetters().add(letter);
-                        }
-                    }
-                }
-            } else {
-                Letter letter = board.getBoard()[anchorRow][square].getLetter();
-                NavigableMap<Character, ModifiableDAWGNode> outgoingNodes = node.getOutgoingTransitions();
-                for (Character c : outgoingNodes.keySet()) {
-                    if (currentTile.horizontalCrosschecksContains(letter.getLetter())) {
-                        if (letter.getLetter().equals(c.toString())) {
-                            ModifiableDAWGNode nextNode = outgoingNodes.get(c);
-                            int nextSquare = square + 1;
-                            //System.out.println("Extending right with board: " + partialWord + letter.getLetter());
-                            extendRight(partialWord + letter.getLetter(), nextNode, nextSquare, leftPartLength);
-                        }
-                    }
-                }
-            }
-        }
     }
 
     private static void writeDAWGToGraphWiz(ModifiableDAWGSet dawg) {

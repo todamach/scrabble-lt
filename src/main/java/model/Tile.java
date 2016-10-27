@@ -14,11 +14,12 @@ public class Tile {
 
     private Letter letter = new Letter();
     private boolean isAnchor;
-    private List<Crosscheck> verticalCrosschecks = new ArrayList<>();
+    private Map<String, Crosscheck> verticalCrosschecks = new HashMap<>();
     private Map<String, Crosscheck> horizontalCrosschecks = new HashMap<>();
     private int multiplier = NONE;
 
     private boolean allHorizontalCrosschecks;
+    private boolean allVerticalCrosschecks;
 
     public Tile(){
 
@@ -27,6 +28,16 @@ public class Tile {
     public Tile(int multiplier){
         this.multiplier = multiplier;
         this.isAnchor = false;
+    }
+
+    public boolean crosscheckContains(char c, int orientation){
+        if(orientation == Board.HORIZONTAL){
+            return horizontalCrosschecksContains(String.valueOf(c));
+        }else if(orientation == Board.VERTICAL){
+            return verticalCrosschecksContains(String.valueOf(c));
+        }
+
+        return false;
     }
 
     public Letter getLetter() {
@@ -45,11 +56,11 @@ public class Tile {
         isAnchor = anchor;
     }
 
-    public List<Crosscheck> getVerticalCrosschecks() {
+    public Map<String, Crosscheck> getVerticalCrosschecks() {
         return verticalCrosschecks;
     }
 
-    public void setVerticalCrosschecks(List<Crosscheck> verticalCrosschecks) {
+    public void setVerticalCrosschecks(Map<String, Crosscheck> verticalCrosschecks) {
         this.verticalCrosschecks = verticalCrosschecks;
     }
 
@@ -73,6 +84,10 @@ public class Tile {
         horizontalCrosschecks.put(letter,crosscheck);
     }
 
+    public void addVerticalCrosscheck(Crosscheck crosscheck, String letter){
+        verticalCrosschecks.put(letter,crosscheck);
+    }
+
     public boolean horizontalCrosschecksContains(String letter){
         if(!this.isAnchor || this.allHorizontalCrosschecks){
             return true;
@@ -81,11 +96,34 @@ public class Tile {
         return horizontalCrosschecks.get(letter) != null;
     }
 
-    public boolean isAllHorizontalCrosschecks() {
+    public boolean verticalCrosschecksContains(String letter){
+        if(!this.isAnchor || this.allVerticalCrosschecks){
+            return true;
+        }
+
+        return verticalCrosschecks.get(letter) != null;
+    }
+
+
+    public boolean isAllCrosschecks() {
         return allHorizontalCrosschecks;
     }
 
-    public void setAllHorizontalCrosschecks(boolean allHorizontalCrosschecks) {
-        this.allHorizontalCrosschecks = allHorizontalCrosschecks;
+    public void setAllCrosschecks(boolean allCrosschecks, int orientation) {
+        if(orientation == Board.HORIZONTAL){
+            this.allHorizontalCrosschecks = allCrosschecks;
+        }else if(orientation == Board.VERTICAL){
+            this.allVerticalCrosschecks = allCrosschecks;
+        }
+
+    }
+
+    public Map<String,Crosscheck> getCrosschecks(int orientation) {
+        if(orientation == Board.HORIZONTAL){
+            return getHorizontalCrosschecks();
+        }else if(orientation == Board.VERTICAL){
+            return getVerticalCrosschecks();
+        }
+        return null;
     }
 }
