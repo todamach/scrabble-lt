@@ -68,7 +68,9 @@ public class Game {
                 nextNode = nextNode.getOutgoingTransitions().get(c);
             }
             //System.out.println("Left part: " + partialWord);
-            extendRight(partialWord, nextNode, anchorSquare, partialWord.length());
+            if(nextNode != null){
+                extendRight(partialWord, nextNode, anchorSquare, partialWord.length());
+            }
         } else {
             //System.out.println("Left part: " + partialWord);
             extendRight(partialWord, node, anchorSquare, partialWord.length());
@@ -95,20 +97,22 @@ public class Game {
             if(square < currentOrientation[anchorRow].length - 1){
                 Tile nextTile = currentOrientation[anchorRow][square];
                 if(nextTile.getLetter().getLetter().isEmpty()){
-                    LegalWord legalWord = new LegalWord(anchorSquare, anchorRow, partialWord, leftPartLength, currentOrientation, orientation);
-                    getCurrentPlayer().addLegalWord(legalWord, orientation);
-                    System.out.println("Legal word: " + legalWord);
+                    getCurrentPlayer().addLegalWord(anchorSquare, anchorRow, partialWord, leftPartLength, currentOrientation, orientation);
                 }
             }else{
-                LegalWord legalWord = new LegalWord(anchorSquare, anchorRow, partialWord, leftPartLength, currentOrientation, orientation);
-                getCurrentPlayer().addLegalWord(legalWord, orientation);
-                System.out.println("Legal word: " + legalWord);
+                getCurrentPlayer().addLegalWord(anchorSquare, anchorRow, partialWord, leftPartLength, currentOrientation, orientation);
             }
         }
         if (square < currentOrientation[anchorRow].length) {
             Tile currentTile = currentOrientation[anchorRow][square];
             if (currentTile.getLetter().getLetter().isEmpty()) {
-                NavigableMap<Character, ModifiableDAWGNode> outgoingNodes = node.getOutgoingTransitions();
+                NavigableMap<Character, ModifiableDAWGNode> outgoingNodes = null;
+                try{
+                    outgoingNodes = node.getOutgoingTransitions();
+                }catch(Exception e){
+                    System.out.println();
+                }
+
                 for (Character c : outgoingNodes.keySet()) {
                     if (currentTile.crosscheckContains(c, orientation)) {
                         int index;

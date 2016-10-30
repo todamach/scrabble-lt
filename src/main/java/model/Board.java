@@ -206,8 +206,8 @@ public class Board {
     }
 
     public void findCrosschecks(Dawg dawg) {
-        findCrosschecks(dawg, horizontalBoard, HORIZONTAL);
-        findCrosschecks(dawg, verticalBoard, VERTICAL);
+        findCrosschecks(dawg, horizontalBoard, VERTICAL);
+        findCrosschecks(dawg, verticalBoard, HORIZONTAL);
 
     }
 
@@ -278,7 +278,7 @@ public class Board {
                                     //TODO: su crosscheku saugot ir zodi
                                     Crosscheck crosscheck = new Crosscheck(crosscheckWord, new Letter(c.toString()));
                                     String crosscheckValueString = topPart + bottomPart;
-                                    crosscheck.setValue(getCrosscheckValueFromString(crosscheckValueString));
+                                    crosscheck.calculateValue(crosscheckValueString);
                                     if(orientation == HORIZONTAL){
                                         tile.addVerticalCrosscheck(crosscheck, String.valueOf(c));
                                     }else if(orientation == VERTICAL){
@@ -294,15 +294,7 @@ public class Board {
         }
     }
 
-    private int getCrosscheckValueFromString(String crosscheckValueString) {
-        int value = 0;
-        for (int i = 0; i < crosscheckValueString.length(); i++){
-            char c = crosscheckValueString.charAt(i);
-            value += Util.Util.getLetterValue(String.valueOf(c));
-        }
 
-        return value;
-    }
 
     public static String printBoardMulti(Tile[][] board) {
         String boardString = "   ";
@@ -400,5 +392,13 @@ public class Board {
            return rack.getLetters().size();
         }
         return limit;
+    }
+
+    public Tile[][] getBoard(int orientation) {
+        if(orientation == Board.HORIZONTAL){
+            return getHorizontalBoard();
+        }else{
+            return getVerticalBoard();
+        }
     }
 }

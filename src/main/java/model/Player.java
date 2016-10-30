@@ -34,6 +34,28 @@ public class Player {
         Collections.sort(legalWordsVertical, descWordValue);
     }
 
+    public void placeBestScoringWordOnTheBoard(Board board) {
+        List<LegalWord> legalWordsMerged = new ArrayList<>();
+        legalWordsMerged.addAll(legalWordsHorizontal);
+        legalWordsMerged.addAll(legalWordsVertical);
+
+        Collections.sort(legalWordsMerged, descWordValue);
+
+        for(LegalWord legalWord : legalWordsMerged){
+            if(wordAndCrosschecksRealWords(legalWord)){
+                Tile[][] boardOrientation = board.getBoard(legalWord.getOrientation());
+
+            }
+
+
+        }
+
+    }
+
+    private boolean wordAndCrosschecksRealWords(LegalWord legalWord){
+        return true;
+    }
+
     public String getName() {
         return name;
     }
@@ -58,7 +80,9 @@ public class Player {
         this.legalWordsVertical = legalWords;
     }
 
-    public void addLegalWord(LegalWord legalWord, int orientation){
+    public void addLegalWord(int anchorSquare, int anchorRow, String partialWord, int leftPartLength, Tile[][] board, int orientation){
+        LegalWord legalWord = new LegalWord(anchorSquare, anchorRow, partialWord, leftPartLength, board, orientation, rack.getLetters().size());
+
         if(orientation == Board.HORIZONTAL){
             this.legalWordsHorizontal.add(legalWord);
         }else if(orientation == Board.VERTICAL){

@@ -110,9 +110,9 @@ public class Tile {
     }
 
     public void setAllCrosschecks(boolean allCrosschecks, int orientation) {
-        if(orientation == Board.HORIZONTAL){
+        if(orientation == Board.VERTICAL){
             this.allHorizontalCrosschecks = allCrosschecks;
-        }else if(orientation == Board.VERTICAL){
+        }else if(orientation == Board.HORIZONTAL){
             this.allVerticalCrosschecks = allCrosschecks;
         }
 

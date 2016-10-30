@@ -22,22 +22,14 @@ public class Main {
 
     public static void main(String[] args) {
 
-        lettersInRack.add(new Letter("p", 0));
-        lettersInRack.add(new Letter("a", 0));
-        lettersInRack.add(new Letter("a", 0));
-        lettersInRack.add(new Letter("a", 0));
+        lettersInRack.add(new Letter("m", 0));
+        lettersInRack.add(new Letter("i", 0));
+        lettersInRack.add(new Letter("n", 0));
+        lettersInRack.add(new Letter("i", 0));
         lettersInRack.add(new Letter("s", 0));
         lettersInRack.add(new Letter("r", 0));
-        lettersInRack.add(new Letter("t", 0));
-        lettersInRack.add(new Letter("m", 0));
-        lettersInRack.add(new Letter("o", 0));
-        lettersInRack.add(new Letter("k", 0));
-        lettersInRack.add(new Letter("e", 0));
-        lettersInRack.add(new Letter("ë", 0));
-        lettersInRack.add(new Letter("o", 0));
-        lettersInRack.add(new Letter("n", 0));
-        lettersInRack.add(new Letter("è", 0));
-        lettersInRack.add(new Letter("i", 0));
+        lettersInRack.add(new Letter("a", 0));
+        lettersInRack.add(new Letter("s", 0));
 
         Rack rack = new Rack();
         rack.setLetters(lettersInRack);
@@ -48,10 +40,7 @@ public class Main {
         board = new Board();
         board.setTestBoard(2);
 
-        System.out.println("Horizontal");
-        System.out.println(Board.printBoardLetters(board.getHorizontalBoard()));
-        System.out.println("Vertical");
-        System.out.println(Board.printBoardLetters(board.getVerticalBoard()));
+
 
         Game game = new Game();
         game.addPlayer(player);
@@ -59,11 +48,16 @@ public class Main {
         board.findAnchors();
         board.findCrosschecks(game.getDawg());
         game.setBoard(board);
-        System.out.println(game.getBoard().toString());
 
+        System.out.println("Horizontal");
+        System.out.println(Board.printBoardLetters(board.getHorizontalBoard()));
+        System.out.println("Vertical");
+        System.out.println(Board.printBoardLetters(board.getVerticalBoard()));
 
         game.generateMoves();
         player.sortLegalWordsByValue();
+
+        player.placeBestScoringWordOnTheBoard(board);
 
         System.out.println("Pabaiga");
     }
