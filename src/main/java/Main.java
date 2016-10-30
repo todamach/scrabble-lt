@@ -12,54 +12,46 @@ import java.util.*;
  */
 public class Main {
 
-    //static String[] row = {"", "", "", "", "", "d", "", "", "", "", "", "", ""};
-    static List<Letter> lettersInRack = new ArrayList<>();
-    public static int anchorSquare = 11;
-    public static int anchorRow = 6;
     static Game game;
     static Player player;
     static Board board;
 
     public static void main(String[] args) {
 
-        lettersInRack.add(new Letter("m", 0));
-        lettersInRack.add(new Letter("i", 0));
-        lettersInRack.add(new Letter("n", 0));
-        lettersInRack.add(new Letter("i", 0));
-        lettersInRack.add(new Letter("s", 0));
-        lettersInRack.add(new Letter("r", 0));
-        lettersInRack.add(new Letter("a", 0));
-        lettersInRack.add(new Letter("s", 0));
-
-        Rack rack = new Rack();
-        rack.setLetters(lettersInRack);
         player = new Player();
         player.setName("Player1");
-        player.setRack(rack);
 
         board = new Board();
         board.setTestBoard(2);
 
-
-
-        Game game = new Game();
+        game = new Game();
         game.addPlayer(player);
-
-        board.findAnchors();
-        board.findCrosschecks(game.getDawg());
         game.setBoard(board);
 
-        System.out.println("Horizontal");
-        System.out.println(Board.printBoardLetters(board.getHorizontalBoard()));
-        System.out.println("Vertical");
-        System.out.println(Board.printBoardLetters(board.getVerticalBoard()));
+        while(true){
+            game.getCurrentPlayer().drawLetters(game.getPool());
+            game.getBoard().findAnchors();
+            game.getBoard().findCrosschecks(game.getDawg());
 
-        game.generateMoves();
-        player.sortLegalWordsByValue();
+            System.out.println("Horizontal");
+            System.out.println(Board.printBoardLetters(game.getBoard().getHorizontalBoard()));
+            System.out.println("Vertical");
+            System.out.println(Board.printBoardLetters(game.getBoard().getVerticalBoard()));
 
-        player.placeBestScoringWordOnTheBoard(board);
+            game.generateMoves();
+            game.getCurrentPlayer().sortLegalWordsByValue();
+            game.getCurrentPlayer().placeBestScoringWordOnTheBoard(game.getBoard());
 
-        System.out.println("Pabaiga");
+            System.out.println("Horizontal");
+            System.out.println(Board.printBoardLetters(game.getBoard().getHorizontalBoard()));
+            System.out.println("Vertical");
+            System.out.println(Board.printBoardLetters(game.getBoard().getVerticalBoard()));
+
+            game.getCurrentPlayer().clearLegalWords();
+
+            System.out.println("Pabaiga");
+        }
+
     }
 
     private static void writeDAWGToGraphWiz(ModifiableDAWGSet dawg) {

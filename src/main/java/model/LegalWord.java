@@ -16,6 +16,7 @@ public class LegalWord {
     int wordValue;
     int orientation;
     int rackSize;
+    int wordStart;
 
     public LegalWord(){}
 
@@ -26,6 +27,7 @@ public class LegalWord {
         this.leftPartLength = leftPartLength;
         this.orientation = orientation;
         this.rackSize = rackSize;
+        this.wordStart = this.anchorSquare - this.leftPartLength;
         this.wordValue = calculateWordValue(board);
 
         findCrosschecks(board);
@@ -116,6 +118,14 @@ public class LegalWord {
 
     public int getOrientation() {
         return orientation;
+    }
+
+    public int getWordStart() {
+        return wordStart;
+    }
+
+    public void setWordStart(int wordStart) {
+        this.wordStart = wordStart;
     }
 
     public int getAnchorRow() {

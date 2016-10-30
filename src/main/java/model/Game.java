@@ -13,6 +13,7 @@ public class Game {
 
     Board board;
     Dawg dawg;
+    LetterPool pool;
     List<Player> players = new ArrayList<>();
     Tile[][] currentOrientation;
     public static int anchorSquare = 0;
@@ -21,6 +22,7 @@ public class Game {
 
     public Game() {
         dawg = new Dawg();
+        pool = new LetterPool();
     }
 
     public void generateMoves(){
@@ -38,7 +40,7 @@ public class Game {
             for (int col = 0; col <= Board.COLS - 1; col++) {
                 anchorSquare = col;
                 if (currentOrientation[row][col].isAnchor()) {
-                    System.out.println("row: " + row + " col: " + col + "##################################################################################################");
+                    //System.out.println("row: " + row + " col: " + col + "##################################################################################################");
                     leftPart("", getDawg().getDawg().sourceNode, board.findLimit(currentOrientation, anchorRow, anchorSquare, getCurrentPlayer().getRack()));
                 }
             }
@@ -170,6 +172,14 @@ public class Game {
 
     public void addPlayer(Player player) {
         this.players.add(player);
+    }
+
+    public LetterPool getPool() {
+        return pool;
+    }
+
+    public void setPool(LetterPool pool) {
+        this.pool = pool;
     }
 
     public Player getCurrentPlayer(){

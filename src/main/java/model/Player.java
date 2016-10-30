@@ -15,7 +15,24 @@ public class Player {
     List<LegalWord> legalWordsVertical = new ArrayList<>();
 
     public Player(){
+        rack = new Rack();
+    }
 
+    public void drawLetters(LetterPool pool){
+        int neededLetters = Rack.SIZE - rack.getLetters().size();
+        for(int i = 0; i < neededLetters; i++){
+            int randomNumber = generateRandomNumber(0, pool.getPool().size() - 1);
+            Letter randomLetter = pool.getPool().get(randomNumber);
+            rack.getLetters().add(randomLetter);
+            pool.getPool().remove(randomLetter);
+        }
+    }
+
+    private int generateRandomNumber(int start, int end){
+        Random r = new Random();
+        int low = start;
+        int high = end;
+        return r.nextInt(high-low) + low;
     }
 
     // We initialize static variables inside a static block.
@@ -44,12 +61,18 @@ public class Player {
         for(LegalWord legalWord : legalWordsMerged){
             if(wordAndCrosschecksRealWords(legalWord)){
                 Tile[][] boardOrientation = board.getBoard(legalWord.getOrientation());
-
+                int currentCol =  legalWord.getWordStart();
+                for(char letter : legalWord.getWord().toCharArray()){
+                    Tile tile = boardOrientation[legalWord.getAnchorRow()][currentCol];
+                    if(tile.getLetter().getLetter().isEmpty()){
+                        tile.getLetter().setLetter(String.valueOf(letter));
+                        rack.remove(String.valueOf(letter));
+                    }
+                    currentCol++;
+                }
+                break;
             }
-
-
         }
-
     }
 
     private boolean wordAndCrosschecksRealWords(LegalWord legalWord){
@@ -89,5 +112,10 @@ public class Player {
             this.legalWordsVertical.add(legalWord);
         }
 
+    }
+
+    public void clearLegalWords() {
+        legalWordsVertical.clear();
+        legalWordsHorizontal.clear();
     }
 }
