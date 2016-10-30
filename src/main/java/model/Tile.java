@@ -40,6 +40,13 @@ public class Tile {
         return false;
     }
 
+    public void resetCrosschecks(){
+        verticalCrosschecks.clear();
+        horizontalCrosschecks.clear();
+        allHorizontalCrosschecks = false;
+        allVerticalCrosschecks = false;
+    }
+
     public Letter getLetter() {
         return letter;
     }
@@ -110,9 +117,9 @@ public class Tile {
     }
 
     public void setAllCrosschecks(boolean allCrosschecks, int orientation) {
-        if(orientation == Board.VERTICAL){
+        if(orientation == Board.HORIZONTAL){
             this.allHorizontalCrosschecks = allCrosschecks;
-        }else if(orientation == Board.HORIZONTAL){
+        }else if(orientation == Board.VERTICAL){
             this.allVerticalCrosschecks = allCrosschecks;
         }
 

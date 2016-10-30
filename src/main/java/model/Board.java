@@ -23,9 +23,9 @@ public class Board {
         generateVerticalBoard();
     }
 
-    public void generateVerticalBoard(){
-        for(int i = 0; i < ROWS; i++){
-            for(int j = 0; j < COLS; j++){
+    public void generateVerticalBoard() {
+        for (int i = 0; i < ROWS; i++) {
+            for (int j = 0; j < COLS; j++) {
                 verticalBoard[j][i] = new Tile();
                 verticalBoard[j][i] = horizontalBoard[i][j];
             }
@@ -170,6 +170,21 @@ public class Board {
             horizontalBoard[8][11].setLetter(Letter.getLetter("k"));
             horizontalBoard[9][11].setLetter(Letter.getLetter("i"));
             horizontalBoard[10][11].setLetter(Letter.getLetter("a"));
+        } else if (i == 3) {
+            //
+            //trenkti
+            //
+            //
+            //
+
+            horizontalBoard[7][5].setLetter(Letter.getLetter("t"));
+            horizontalBoard[7][6].setLetter(Letter.getLetter("r"));
+            horizontalBoard[7][7].setLetter(Letter.getLetter("e"));
+            horizontalBoard[7][8].setLetter(Letter.getLetter("n"));
+            horizontalBoard[7][9].setLetter(Letter.getLetter("k"));
+            horizontalBoard[7][10].setLetter(Letter.getLetter("t"));
+            horizontalBoard[7][11].setLetter(Letter.getLetter("i"));
+
         }
     }
 
@@ -206,21 +221,32 @@ public class Board {
     }
 
     public void findCrosschecks(Dawg dawg) {
-        findCrosschecks(dawg, horizontalBoard, VERTICAL);
-        findCrosschecks(dawg, verticalBoard, HORIZONTAL);
+        resetCrosschecks(horizontalBoard);
+        findCrosschecks(dawg, verticalBoard, VERTICAL);
+        findCrosschecks(dawg, horizontalBoard, HORIZONTAL);
 
     }
 
-    private void findCrosschecks(Dawg dawg, Tile[][] board, int orientation){
+    private void resetCrosschecks(Tile[][] board) {
+        for (int row = 0; row <= Board.ROWS - 1; row++) {
+            for (int col = 0; col <= Board.COLS - 1; col++) {
+                Tile tile = board[row][col];
+                if(tile.isAnchor()){
+                    tile.resetCrosschecks();
+                }
+            }
+        }
+    }
+
+    private void findCrosschecks(Dawg dawg, Tile[][] board, int orientation) {
         for (int row = 0; row <= Board.ROWS - 1; row++) {
             for (int col = 0; col <= Board.COLS - 1; col++) {
                 if (board[row][col].isAnchor()) {
                     Tile tile = board[row][col];
-                    if(board[row - 1][col].getLetter().getLetter().isEmpty() &&
-                            board[row + 1][col].getLetter().getLetter().isEmpty()){
+                    if (allCrosschecks(board, row, col)) {
                         // jeigu langeliai virs ir po tile yra tusti, tai visi crosschekai galimi
                         tile.setAllCrosschecks(true, orientation);
-                    }else{
+                    } else {
                         //System.out.println("Find crosscheck for " + row + " " + col);
                         String topPart = "";
                         int currentRow = row - 1;
@@ -243,12 +269,18 @@ public class Board {
                         ModifiableDAWGNode nextNode = dawg.getDawg().sourceNode;
                         for (int i = 0; i < topPart.length(); i++) {
                             char c = topPart.charAt(i);
-                            nextNode = nextNode.getOutgoingTransitions().get(c);
+                            try {
+                                nextNode = nextNode.getOutgoingTransitions().get(c);
+                            } catch (Exception e) {
+                                // TODO: cia kazko null pointer exception kartais
+                                System.out.print("");
+                            }
+
                         }
 
                         String bottomPart = "";
 
-                        if(nextNode != null){
+                        if (nextNode != null) {
                             NavigableMap<Character, ModifiableDAWGNode> possibleChrosscheckLetters = nextNode.getOutgoingTransitions();
                             for (Character c : possibleChrosscheckLetters.keySet()) {
                                 ModifiableDAWGNode bottomNode = possibleChrosscheckLetters.get(c);
@@ -258,12 +290,12 @@ public class Board {
                                 while (currentRow <= 14 && !board[currentRow][col].getLetter().getLetter().isEmpty()) {
                                     Character bottomTileChar = board[currentRow][col].getLetter().getLetter().charAt(0);
                                     NavigableMap<Character, ModifiableDAWGNode> bottomNodeTransitions = bottomNode.getOutgoingTransitions();
-                                    if(bottomNodeTransitions.size() == 0){
+                                    if (bottomNodeTransitions.size() == 0) {
                                         foundLastNode = false;
                                         break;
                                     }
                                     bottomNode = bottomNodeTransitions.get(bottomTileChar);
-                                    if(bottomNode == null){
+                                    if (bottomNode == null) {
                                         foundLastNode = false;
                                         break;
                                     }
@@ -272,16 +304,16 @@ public class Board {
                                     currentRow++;
                                 }
 
-                                if(foundLastNode && bottomNode != null && bottomNode.isAcceptNode()){
+                                if (foundLastNode && bottomNode != null && bottomNode.isAcceptNode()) {
                                     //System.out.println("tinka crosschekas: " + c);
                                     String crosscheckWord = topPart + c + bottomPart;
                                     //TODO: su crosscheku saugot ir zodi
                                     Crosscheck crosscheck = new Crosscheck(crosscheckWord, new Letter(c.toString()));
                                     String crosscheckValueString = topPart + bottomPart;
                                     crosscheck.calculateValue(crosscheckValueString);
-                                    if(orientation == HORIZONTAL){
+                                    if (orientation == VERTICAL) {
                                         tile.addVerticalCrosscheck(crosscheck, String.valueOf(c));
-                                    }else if(orientation == VERTICAL){
+                                    } else if (orientation == HORIZONTAL) {
                                         tile.addHorizontalCrosscheck(crosscheck, String.valueOf(c));
                                     }
 
@@ -294,6 +326,24 @@ public class Board {
         }
     }
 
+    private boolean allCrosschecks(Tile[][] board, int row, int col) {
+        if (row == 0) {
+            if (board[row + 1][col].getLetter().getLetter().isEmpty()) {
+                return true;
+            }
+        } else if (row == Board.ROWS - 1) {
+            if (board[row - 1][col].getLetter().getLetter().isEmpty()) {
+                return true;
+            }
+        } else {
+            if (board[row - 1][col].getLetter().getLetter().isEmpty() &&
+                    board[row + 1][col].getLetter().getLetter().isEmpty()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
 
     public static String printBoardMulti(Tile[][] board) {
@@ -307,7 +357,7 @@ public class Board {
             for (int col = 0; col <= COLS - 1; col++) {
                 Letter letter = board[row][col].getLetter();
                 Tile tile = board[row][col];
-                switch(tile.getMultiplier()){
+                switch (tile.getMultiplier()) {
                     case Tile.DOUBLE_LETTER:
                         boardString += " " + "A" + " ";
                         break;
@@ -342,11 +392,11 @@ public class Board {
             for (int col = 0; col <= COLS - 1; col++) {
                 Letter letter = board[row][col].getLetter();
                 Tile tile = board[row][col];
-                if(!letter.getLetter().isEmpty()){
+                if (!letter.getLetter().isEmpty()) {
                     boardString += " " + letter.getLetter() + " ";
-                }else if(tile.isAnchor()){
-                    boardString += " # ";
-                }else {
+                } else if (tile.isAnchor()) {
+                    boardString += "   ";
+                } else {
                     boardString += "   ";
                 }
             }
@@ -368,11 +418,11 @@ public class Board {
             for (int col = 0; col <= COLS - 1; col++) {
                 Letter letter = getHorizontalBoard()[row][col].getLetter();
                 Tile tile = getHorizontalBoard()[row][col];
-                if(!letter.getLetter().isEmpty()){
+                if (!letter.getLetter().isEmpty()) {
                     board += " " + letter.getLetter() + " ";
-                }else if(tile.isAnchor()){
+                } else if (tile.isAnchor()) {
                     board += " # ";
-                }else {
+                } else {
                     board += "   ";
                 }
             }
@@ -384,20 +434,22 @@ public class Board {
 
     public int findLimit(Tile[][] board, int anchorRow, int anchorSquare, Rack rack) {
         int limit = -1;
-        while(anchorSquare >= 0 && board[anchorRow][anchorSquare].getLetter().getLetter().isEmpty()){
-            limit++;
+        while (anchorSquare >= 0 && board[anchorRow][anchorSquare].getLetter().getLetter().isEmpty()) {
+            if (anchorSquare - 1 >= 0 && board[anchorRow][anchorSquare - 1].getLetter().getLetter().isEmpty()) {
+                limit++;
+            }
             anchorSquare--;
         }
-        if(limit > rack.getLetters().size()){
-           return rack.getLetters().size();
+        if (limit > rack.getLetters().size()) {
+            return rack.getLetters().size();
         }
         return limit;
     }
 
     public Tile[][] getBoard(int orientation) {
-        if(orientation == Board.HORIZONTAL){
+        if (orientation == Board.HORIZONTAL) {
             return getHorizontalBoard();
-        }else{
+        } else {
             return getVerticalBoard();
         }
     }

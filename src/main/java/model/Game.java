@@ -48,50 +48,55 @@ public class Game {
     }
 
     private void leftPart(String partialWord, ModifiableDAWGNode node, int limit) {
-
-        int currentCol = anchorSquare - 1;
-        String leftPart = "";
-        // Jeigu iskarto pries anchorSquare yra raide, tai imam visas raides iki pradzios, ir nebeieskom daugiau jokiu left parts
-        Tile currentTile = currentOrientation[anchorRow][currentCol];
-        if (!currentTile.getLetter().getLetter().equals("")) {
-            // gaunam stringa raidziu einanciu pries anchorSquare ir ji apverciam
-            while (currentCol >= 0) {
-                if (currentOrientation[anchorRow][currentCol].getLetter().getLetter().equals("")) {
-                    break;
-                }
-                leftPart += currentOrientation[anchorRow][currentCol].getLetter().getLetter();
-                currentCol--;
-            }
-            partialWord = new StringBuilder(leftPart).reverse().toString();
-            // gaunam to stringo paskutini node grafe
-            ModifiableDAWGNode nextNode = node;
-            for (int i = 0; i < partialWord.length(); i++) {
-                char c = partialWord.charAt(i);
-                nextNode = nextNode.getOutgoingTransitions().get(c);
-            }
-            //System.out.println("Left part: " + partialWord);
-            if(nextNode != null){
-                extendRight(partialWord, nextNode, anchorSquare, partialWord.length());
-            }
-        } else {
-            //System.out.println("Left part: " + partialWord);
+        // TODO: reik kazka daryt, kai anchorSquare = 0;
+        if(anchorSquare == 0){
             extendRight(partialWord, node, anchorSquare, partialWord.length());
-            if (limit > 0) {
-                NavigableMap<Character, ModifiableDAWGNode> outgoingNodes = node.getOutgoingTransitions();
-                for (Character c : outgoingNodes.keySet()) {
-                    if (currentTile.crosscheckContains(c, orientation)) {
-                        int index;
-                        if ((index = getCurrentPlayer().getRack().contains(c.toString())) > -1) {
-                            Letter letter = getCurrentPlayer().getRack().getLetters().get(index);
-                            getCurrentPlayer().getRack().getLetters().remove(index);
-                            ModifiableDAWGNode nextNode = outgoingNodes.get(c);
-                            leftPart(partialWord + c, nextNode, limit - 1);
-                            getCurrentPlayer().getRack().getLetters().add(letter);
+        }else{
+            int currentCol = anchorSquare - 1;
+            String leftPart = "";
+            // Jeigu iskarto pries anchorSquare yra raide, tai imam visas raides iki pradzios, ir nebeieskom daugiau jokiu left parts
+            Tile currentTile = currentOrientation[anchorRow][currentCol];
+            if (!currentTile.getLetter().getLetter().equals("")) {
+                // gaunam stringa raidziu einanciu pries anchorSquare ir ji apverciam
+                while (currentCol >= 0) {
+                    if (currentOrientation[anchorRow][currentCol].getLetter().getLetter().equals("")) {
+                        break;
+                    }
+                    leftPart += currentOrientation[anchorRow][currentCol].getLetter().getLetter();
+                    currentCol--;
+                }
+                partialWord = new StringBuilder(leftPart).reverse().toString();
+                // gaunam to stringo paskutini node grafe
+                ModifiableDAWGNode nextNode = node;
+                for (int i = 0; i < partialWord.length(); i++) {
+                    char c = partialWord.charAt(i);
+                    nextNode = nextNode.getOutgoingTransitions().get(c);
+                }
+                //System.out.println("Left part: " + partialWord);
+                if(nextNode != null){
+                    extendRight(partialWord, nextNode, anchorSquare, partialWord.length());
+                }
+            } else {
+                //System.out.println("Left part: " + partialWord);
+                extendRight(partialWord, node, anchorSquare, partialWord.length());
+                if (limit > 0) {
+                    NavigableMap<Character, ModifiableDAWGNode> outgoingNodes = node.getOutgoingTransitions();
+                    for (Character c : outgoingNodes.keySet()) {
+                        if (currentTile.crosscheckContains(c, orientation)) {
+                            int index;
+                            if ((index = getCurrentPlayer().getRack().contains(c.toString())) > -1) {
+                                Letter letter = getCurrentPlayer().getRack().getLetters().get(index);
+                                getCurrentPlayer().getRack().getLetters().remove(index);
+                                ModifiableDAWGNode nextNode = outgoingNodes.get(c);
+                                leftPart(partialWord + c, nextNode, limit - 1);
+                                getCurrentPlayer().getRack().getLetters().add(letter);
+                            }
                         }
                     }
                 }
             }
         }
+
     }
 
     private void extendRight(String partialWord, ModifiableDAWGNode node, int square, int leftPartLength) {

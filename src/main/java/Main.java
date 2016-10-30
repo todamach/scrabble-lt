@@ -22,7 +22,7 @@ public class Main {
         player.setName("Player1");
 
         board = new Board();
-        board.setTestBoard(2);
+        board.setTestBoard(3);
 
         game = new Game();
         game.addPlayer(player);
@@ -33,23 +33,18 @@ public class Main {
             game.getBoard().findAnchors();
             game.getBoard().findCrosschecks(game.getDawg());
 
-            System.out.println("Horizontal");
-            System.out.println(Board.printBoardLetters(game.getBoard().getHorizontalBoard()));
-            System.out.println("Vertical");
-            System.out.println(Board.printBoardLetters(game.getBoard().getVerticalBoard()));
-
             game.generateMoves();
             game.getCurrentPlayer().sortLegalWordsByValue();
             game.getCurrentPlayer().placeBestScoringWordOnTheBoard(game.getBoard());
 
             System.out.println("Horizontal");
             System.out.println(Board.printBoardLetters(game.getBoard().getHorizontalBoard()));
-            System.out.println("Vertical");
-            System.out.println(Board.printBoardLetters(game.getBoard().getVerticalBoard()));
-
-            game.getCurrentPlayer().clearLegalWords();
+            //System.out.println("Vertical");
+            //System.out.println(Board.printBoardLetters(game.getBoard().getVerticalBoard()));
 
             System.out.println("Pabaiga");
+
+            game.getCurrentPlayer().clearLegalWords();
         }
 
     }
