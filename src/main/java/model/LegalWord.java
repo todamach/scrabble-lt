@@ -28,9 +28,11 @@ public class LegalWord {
         this.orientation = orientation;
         this.rackSize = rackSize;
         this.wordStart = this.anchorSquare - this.leftPartLength;
-        this.wordValue = calculateWordValue(board);
 
         findCrosschecks(board);
+
+        this.wordValue = calculateWordValue(board);
+
     }
 
     private int calculateWordValue(Tile[][] board){

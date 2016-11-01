@@ -19,6 +19,8 @@ public class Game {
     public static int anchorSquare = 0;
     public static int anchorRow = 0;
     public static int orientation;
+    private static int currentCol = 0;
+    private static int limit = 0;
 
     public Game() {
         dawg = new Dawg();
@@ -41,21 +43,23 @@ public class Game {
                 anchorSquare = col;
                 if (currentOrientation[row][col].isAnchor()) {
                     //System.out.println("row: " + row + " col: " + col + "##################################################################################################");
-                    leftPart("", getDawg().getDawg().sourceNode, board.findLimit(currentOrientation, anchorRow, anchorSquare, getCurrentPlayer().getRack()));
+                    currentCol = anchorSquare;
+                    limit = board.findLimit(currentOrientation, anchorRow, anchorSquare, getCurrentPlayer().getRack());
+                    leftPart("", getDawg().getDawg().sourceNode, limit);
                 }
             }
         }
     }
 
-    private void leftPart(String partialWord, ModifiableDAWGNode node, int limit) {
-        // TODO: reik kazka daryt, kai anchorSquare = 0;
-        if(anchorSquare == 0){
+    private void leftPart(String partialWord, ModifiableDAWGNode node, int currentLimit) {
+
+        if(currentCol == 0){
             extendRight(partialWord, node, anchorSquare, partialWord.length());
         }else{
-            int currentCol = anchorSquare - 1;
+            currentCol = anchorSquare - 1;
             String leftPart = "";
             // Jeigu iskarto pries anchorSquare yra raide, tai imam visas raides iki pradzios, ir nebeieskom daugiau jokiu left parts
-            Tile currentTile = currentOrientation[anchorRow][currentCol];
+            Tile currentTile = currentOrientation[anchorRow][anchorSquare - 1];
             if (!currentTile.getLetter().getLetter().equals("")) {
                 // gaunam stringa raidziu einanciu pries anchorSquare ir ji apverciam
                 while (currentCol >= 0) {
@@ -79,8 +83,14 @@ public class Game {
             } else {
                 //System.out.println("Left part: " + partialWord);
                 extendRight(partialWord, node, anchorSquare, partialWord.length());
-                if (limit > 0) {
+                if (currentLimit > 0) {
                     NavigableMap<Character, ModifiableDAWGNode> outgoingNodes = node.getOutgoingTransitions();
+                    try{
+                        currentTile = currentOrientation[anchorRow][anchorSquare - (limit - (currentLimit - 1))];
+                    }catch (Exception e){
+                        System.out.print("");
+                    }
+
                     for (Character c : outgoingNodes.keySet()) {
                         if (currentTile.crosscheckContains(c, orientation)) {
                             int index;
@@ -88,7 +98,7 @@ public class Game {
                                 Letter letter = getCurrentPlayer().getRack().getLetters().get(index);
                                 getCurrentPlayer().getRack().getLetters().remove(index);
                                 ModifiableDAWGNode nextNode = outgoingNodes.get(c);
-                                leftPart(partialWord + c, nextNode, limit - 1);
+                                leftPart(partialWord + c, nextNode, currentLimit - 1);
                                 getCurrentPlayer().getRack().getLetters().add(letter);
                             }
                         }

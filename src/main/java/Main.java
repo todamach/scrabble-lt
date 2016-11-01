@@ -20,13 +20,18 @@ public class Main {
 
         player = new Player();
         player.setName("Player1");
+        //player.setTestRack();
 
         board = new Board();
         board.setTestBoard(3);
+        //board.readFromFile();
 
         game = new Game();
         game.addPlayer(player);
         game.setBoard(board);
+
+        System.out.println("Horizontal");
+        System.out.println(Board.printBoardLetters(game.getBoard().getHorizontalBoard()));
 
         while(true){
             game.getCurrentPlayer().drawLetters(game.getPool());
@@ -39,8 +44,8 @@ public class Main {
 
             System.out.println("Horizontal");
             System.out.println(Board.printBoardLetters(game.getBoard().getHorizontalBoard()));
-            //System.out.println("Vertical");
-            //System.out.println(Board.printBoardLetters(game.getBoard().getVerticalBoard()));
+            System.out.println("Vertical");
+            System.out.println(Board.printBoardLetters(game.getBoard().getVerticalBoard()));
 
             System.out.println("Pabaiga");
 

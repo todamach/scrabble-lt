@@ -66,6 +66,7 @@ public class Player {
                     Tile tile = boardOrientation[legalWord.getAnchorRow()][currentCol];
                     if(tile.getLetter().getLetter().isEmpty()){
                         tile.getLetter().setLetter(String.valueOf(letter));
+                        tile.setAnchor(false);
                         rack.remove(String.valueOf(letter));
                     }
                     currentCol++;
@@ -117,5 +118,17 @@ public class Player {
     public void clearLegalWords() {
         legalWordsVertical.clear();
         legalWordsHorizontal.clear();
+    }
+
+    public void setTestRack() {
+        rack.getLetters().add(new Letter("u"));
+        rack.getLetters().add(new Letter("u"));
+        rack.getLetters().add(new Letter("u"));
+        rack.getLetters().add(new Letter("e"));
+        rack.getLetters().add(new Letter("t"));
+        rack.getLetters().add(new Letter("i"));
+        rack.getLetters().add(new Letter("l"));
+        rack.getLetters().add(new Letter("s"));
+
     }
 }

@@ -2,6 +2,11 @@ package model;
 
 import dawg.ModifiableDAWGNode;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NavigableMap;
 
 /**
@@ -231,7 +236,7 @@ public class Board {
         for (int row = 0; row <= Board.ROWS - 1; row++) {
             for (int col = 0; col <= Board.COLS - 1; col++) {
                 Tile tile = board[row][col];
-                if(tile.isAnchor()){
+                if (tile.isAnchor()) {
                     tile.resetCrosschecks();
                 }
             }
@@ -273,6 +278,8 @@ public class Board {
                                 nextNode = nextNode.getOutgoingTransitions().get(c);
                             } catch (Exception e) {
                                 // TODO: cia kazko null pointer exception kartais
+                                // del to, nes pridelioja neegzistuojanciu zodziu, ir juos po to bando atkurti
+                                // crosscheku problema
                                 System.out.print("");
                             }
 
@@ -307,7 +314,6 @@ public class Board {
                                 if (foundLastNode && bottomNode != null && bottomNode.isAcceptNode()) {
                                     //System.out.println("tinka crosschekas: " + c);
                                     String crosscheckWord = topPart + c + bottomPart;
-                                    //TODO: su crosscheku saugot ir zodi
                                     Crosscheck crosscheck = new Crosscheck(crosscheckWord, new Letter(c.toString()));
                                     String crosscheckValueString = topPart + bottomPart;
                                     crosscheck.calculateValue(crosscheckValueString);
@@ -452,5 +458,39 @@ public class Board {
         } else {
             return getVerticalBoard();
         }
+    }
+
+    public void readFromFile() {
+        try {
+            String[] lines = readLines("D:\\Projektai\\Intellij\\DAWG programa\\src\\main\\resources\\savedBoard");
+            for (int i = 0; i < lines.length; i++) {
+                if (i > 0) {
+                    int col = 0;
+                    for (int j = 4; j < lines[i].length(); j++) {
+                        if((j - 1) % 3 == 0){
+                            if(!String.valueOf(lines[i].toCharArray()[j]).isEmpty() && !String.valueOf(lines[i].toCharArray()[j]).equals(" ")){
+                                horizontalBoard[i - 1][col].setLetter(Letter.getLetter(String.valueOf(lines[i].toCharArray()[j])));
+                            }
+                            col++;
+                        }
+
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String[] readLines(String filename) throws IOException {
+        FileReader fileReader = new FileReader(filename);
+        BufferedReader bufferedReader = new BufferedReader(fileReader);
+        List<String> lines = new ArrayList<String>();
+        String line = null;
+        while ((line = bufferedReader.readLine()) != null) {
+            lines.add(line);
+        }
+        bufferedReader.close();
+        return lines.toArray(new String[lines.size()]);
     }
 }
