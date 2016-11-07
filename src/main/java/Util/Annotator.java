@@ -13,7 +13,7 @@ public class Annotator {
 
     public Annotator(){}
 
-    public boolean checkWord(String word){
+    public static boolean checkWord(String word){
 
         OkHttpClient client = new OkHttpClient();
 
@@ -48,6 +48,10 @@ public class Annotator {
             }
             String kalbosDalis = type.split("\\.")[0];
             if(kalbosDalis.equals("tikr")){
+                return false;
+            }else if(kalbosDalis.equals("sutr")){
+                return false;
+            }else if(kalbosDalis.equals("akronim")){
                 return false;
             }
         }

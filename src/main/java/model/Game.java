@@ -111,7 +111,7 @@ public class Game {
 
     private void extendRight(String partialWord, ModifiableDAWGNode node, int square, int leftPartLength) {
         if (square > anchorSquare && node.isAcceptNode()) {
-            if(square < currentOrientation[anchorRow].length - 1){
+            if(square < currentOrientation[anchorRow].length){
                 Tile nextTile = currentOrientation[anchorRow][square];
                 if(nextTile.getLetter().getLetter().isEmpty()){
                     getCurrentPlayer().addLegalWord(anchorSquare, anchorRow, partialWord, leftPartLength, currentOrientation, orientation);

@@ -1,5 +1,7 @@
 package model;
 
+import Util.Annotator;
+
 import java.util.*;
 
 /**
@@ -51,15 +53,16 @@ public class Player {
         Collections.sort(legalWordsVertical, descWordValue);
     }
 
-    public void placeBestScoringWordOnTheBoard(Board board) {
+    public boolean placeBestScoringWordOnTheBoard(Board board) {
         List<LegalWord> legalWordsMerged = new ArrayList<>();
         legalWordsMerged.addAll(legalWordsHorizontal);
         legalWordsMerged.addAll(legalWordsVertical);
 
         Collections.sort(legalWordsMerged, descWordValue);
-
+        boolean wordPlaced = false;
         for(LegalWord legalWord : legalWordsMerged){
             if(wordAndCrosschecksRealWords(legalWord)){
+                System.out.println(legalWord);
                 Tile[][] boardOrientation = board.getBoard(legalWord.getOrientation());
                 int currentCol =  legalWord.getWordStart();
                 for(char letter : legalWord.getWord().toCharArray()){
@@ -68,15 +71,26 @@ public class Player {
                         tile.getLetter().setLetter(String.valueOf(letter));
                         tile.setAnchor(false);
                         rack.remove(String.valueOf(letter));
+                        wordPlaced = true;
                     }
                     currentCol++;
                 }
                 break;
             }
         }
+        return wordPlaced;
     }
 
     private boolean wordAndCrosschecksRealWords(LegalWord legalWord){
+        if(Annotator.checkWord(legalWord.getWord())){
+            for(LegalWord.CrosscheckWord word : legalWord.getWordsToCrosscheck()){
+                if(!Annotator.checkWord(word.getWord())){
+                    return false;
+                }
+            }
+        }else{
+            return false;
+        }
         return true;
     }
 
@@ -121,14 +135,14 @@ public class Player {
     }
 
     public void setTestRack() {
-        rack.getLetters().add(new Letter("u"));
-        rack.getLetters().add(new Letter("u"));
-        rack.getLetters().add(new Letter("u"));
-        rack.getLetters().add(new Letter("e"));
-        rack.getLetters().add(new Letter("t"));
+        rack.getLetters().add(new Letter("c"));
         rack.getLetters().add(new Letter("i"));
-        rack.getLetters().add(new Letter("l"));
+        rack.getLetters().add(new Letter("o"));
+        rack.getLetters().add(new Letter("r"));
         rack.getLetters().add(new Letter("s"));
+        rack.getLetters().add(new Letter("a"));
+        rack.getLetters().add(new Letter("i"));
+        rack.getLetters().add(new Letter("è"));
 
     }
 }
