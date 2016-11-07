@@ -12,11 +12,11 @@ bugas, kai baigiasi raidės
 
 ~~score bonus for empty rack~~
 
-~~check final word http://tekstynas.vdu.lt/page.xhtml;jsessionid=EC93C76183F64FB0FB3AD1AE84838F9E?id=morphological-annotator
+~~check final word http://tekstynas.vdu.lt/page.xhtml;jsessionid=EC93C76183F64FB0FB3AD1AE84838F9E?id=morphological-annotator~~
 
-~~vertical word generation
+~~vertical word generation~~
 
-~~evaluate crosschecks for word value
+~~evaluate crosschecks for word value~~
 
 # libas, kuris naudojamas grafui sudaryti ir per jį eiti (modifikuotas)
 
