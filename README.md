@@ -4,9 +4,13 @@ Lietuviška scrabble versija. Šitoj repositorijoj back-endas.
 
 # todo
 
+išfiltruoti teorinius žodžius
+
+raidžių keitimas, kai neranda žodžio
+
 blank tiles
 
-pirmas žodis
+~~pirmas žodis~~
 
 bugas, kai baigiasi raidės
 
