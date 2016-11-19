@@ -22,19 +22,26 @@ public class Player {
     }
 
     public void drawLetters(LetterPool pool){
-        int neededLetters = Rack.SIZE - rack.getLetters().size();
-        for(int i = 0; i < neededLetters; i++){
-            int randomNumber = generateRandomNumber(0, pool.getPool().size() - 1);
-            Letter randomLetter = pool.getPool().get(randomNumber);
-            rack.getLetters().add(randomLetter);
-            pool.getPool().remove(randomLetter);
-        }
+
+            int neededLetters = Rack.SIZE - rack.getLetters().size();
+            for(int i = 0; i < neededLetters; i++){
+                if(pool.getPool().size() > 0) {
+                    int randomNumber = generateRandomNumber(0, pool.getPool().size() - 1);
+                    Letter randomLetter = pool.getPool().get(randomNumber);
+                    rack.getLetters().add(randomLetter);
+                    pool.getPool().remove(randomLetter);
+                }
+            }
+
     }
 
     private int generateRandomNumber(int start, int end){
         Random r = new Random();
         int low = start;
         int high = end;
+        if(low == 0 && high == 0){
+            return 0;
+        }
         return r.nextInt(high-low) + low;
     }
 
