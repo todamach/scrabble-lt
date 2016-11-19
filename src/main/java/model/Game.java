@@ -21,6 +21,9 @@ public class Game {
     public static int orientation;
     private static int currentCol = 0;
     private static int limit = 0;
+    private int currentPlayer = 0;
+
+    private int turn = 1;
 
     public Game() {
         dawg = new Dawg();
@@ -34,18 +37,27 @@ public class Game {
         currentOrientation = board.getVerticalBoard();
         orientation = Board.VERTICAL;
         generateMoves(currentOrientation);
+        turn++;
     }
 
     private void generateMoves(Tile[][] currentOrientation){
-        for (int row = 0; row <= Board.ROWS - 1; row++) {
-            anchorRow = row;
-            for (int col = 0; col <= Board.COLS - 1; col++) {
-                anchorSquare = col;
-                if (currentOrientation[row][col].isAnchor()) {
-                    //System.out.println("row: " + row + " col: " + col + "##################################################################################################");
-                    currentCol = anchorSquare;
-                    limit = board.findLimit(currentOrientation, anchorRow, anchorSquare, getCurrentPlayer().getRack());
-                    leftPart("", getDawg().getDawg().sourceNode, limit);
+        if(turn == 1){
+            anchorSquare = 7;
+            currentCol = 7;
+            anchorRow = 7;
+            limit = board.findLimit(currentOrientation, anchorRow, anchorSquare, getCurrentPlayer().getRack());
+            leftPart("", getDawg().getDawg().sourceNode, limit);
+        }else {
+            for (int row = 0; row <= Board.ROWS - 1; row++) {
+                anchorRow = row;
+                for (int col = 0; col <= Board.COLS - 1; col++) {
+                    anchorSquare = col;
+                    if (currentOrientation[row][col].isAnchor()) {
+                        //System.out.println("row: " + row + " col: " + col + "##################################################################################################");
+                        currentCol = anchorSquare;
+                        limit = board.findLimit(currentOrientation, anchorRow, anchorSquare, getCurrentPlayer().getRack());
+                        leftPart("", getDawg().getDawg().sourceNode, limit);
+                    }
                 }
             }
         }
@@ -198,7 +210,16 @@ public class Game {
     }
 
     public Player getCurrentPlayer(){
-        // TODO: pagal eile ar kazkas tokio
-        return this.players.get(0);
+        return this.players.get(currentPlayer);
     }
+
+    public void nextPlayer(){
+        if(currentPlayer < players.size() - 1){
+            currentPlayer++;
+        }else{
+            currentPlayer = 0;
+        }
+    }
+
+
 }

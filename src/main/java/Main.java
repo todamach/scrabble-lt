@@ -12,22 +12,32 @@ import java.util.*;
  */
 public class Main {
 
-    static Game game;
-    static Player player;
-    static Board board;
+
 
     public static void main(String[] args) {
 
-        player = new Player();
-        player.setName("Player1");
-        //player.setTestRack();
+        Game game;
+        Board board;
+
+        Player player1;
+        Player player2;
+
+
+        player1 = new Player();
+        player1.setName("Player1");
+        //player1.setTestRack();
+
+        player2 = new Player();
+        player2.setName("Player2");
+        //player2.setTestRack();
 
         board = new Board();
-        board.setTestBoard(3);
+        //board.setTestBoard(3);
         //board.readFromFile();
 
         game = new Game();
-        game.addPlayer(player);
+        game.addPlayer(player1);
+        game.addPlayer(player2);
         game.setBoard(board);
 
         System.out.println("Horizontal");
@@ -44,30 +54,13 @@ public class Main {
 
             System.out.println("Horizontal");
             System.out.println(Board.printBoardLetters(game.getBoard().getHorizontalBoard()));
-            System.out.println("Vertical");
-            System.out.println(Board.printBoardLetters(game.getBoard().getVerticalBoard()));
 
+            System.out.println(game.getCurrentPlayer());
             System.out.println("Pabaiga");
 
             game.getCurrentPlayer().clearLegalWords();
+            game.nextPlayer();
         }
 
     }
-
-    private static void writeDAWGToGraphWiz(ModifiableDAWGSet dawg) {
-        String graphWiz = dawg.toGraphViz(true, false);
-
-        PrintWriter writer = null;
-        try {
-            writer = new PrintWriter("D:\\Projektai\\Intellij\\DAWG programa\\src\\main\\resources\\graphWiz.txt", "Unicode");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        writer.println(graphWiz);
-        writer.close();
-    }
-
-
 }

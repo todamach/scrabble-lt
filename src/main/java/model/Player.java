@@ -15,6 +15,7 @@ public class Player {
     Rack rack;
     List<LegalWord> legalWordsHorizontal = new ArrayList<>();
     List<LegalWord> legalWordsVertical = new ArrayList<>();
+    int score;
 
     public Player(){
         rack = new Rack();
@@ -75,6 +76,7 @@ public class Player {
                     }
                     currentCol++;
                 }
+                score += legalWord.getWordValue();
                 break;
             }
         }
@@ -118,6 +120,14 @@ public class Player {
         this.legalWordsVertical = legalWords;
     }
 
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
     public void addLegalWord(int anchorSquare, int anchorRow, String partialWord, int leftPartLength, Tile[][] board, int orientation){
         LegalWord legalWord = new LegalWord(anchorSquare, anchorRow, partialWord, leftPartLength, board, orientation, rack.getLetters().size());
 
@@ -135,14 +145,18 @@ public class Player {
     }
 
     public void setTestRack() {
-        rack.getLetters().add(new Letter("c"));
+        rack.getLetters().add(new Letter("g"));
         rack.getLetters().add(new Letter("i"));
-        rack.getLetters().add(new Letter("o"));
+        rack.getLetters().add(new Letter("i"));
         rack.getLetters().add(new Letter("r"));
-        rack.getLetters().add(new Letter("s"));
+        rack.getLetters().add(new Letter("u"));
         rack.getLetters().add(new Letter("a"));
-        rack.getLetters().add(new Letter("i"));
-        rack.getLetters().add(new Letter("è"));
+        rack.getLetters().add(new Letter("h"));
+        rack.getLetters().add(new Letter("a"));
+    }
 
+    @Override
+    public String toString(){
+        return "" + name + " " + score;
     }
 }

@@ -12,6 +12,7 @@ public class Dawg {
 
     public Dawg(){
         dawg = readDAWGFromFile();
+       // writeDAWGToGraphWiz(dawg);
     }
 
     public ModifiableDAWGSet getDawg() {
@@ -26,6 +27,7 @@ public class Dawg {
         ModifiableDAWGSet dawg = new ModifiableDAWGSet();
 
         String path = "D:\\Projektai\\Intellij\\DAWG programa\\src\\main\\resources\\15klt.txt";
+        //String path = "D:\\Projektai\\Intellij\\DAWG programa\\src\\main\\resources\\test.txt";
         File file = new File(path);
 
         try (BufferedReader in = new BufferedReader(new InputStreamReader(
@@ -41,5 +43,20 @@ public class Dawg {
         }
 
         return dawg;
+    }
+
+    private static void writeDAWGToGraphWiz(ModifiableDAWGSet dawg) {
+        String graphWiz = dawg.toGraphViz(false, false);
+
+        PrintWriter writer = null;
+        try {
+            writer = new PrintWriter("D:\\Projektai\\Intellij\\DAWG programa\\src\\main\\resources\\graphWiz.txt", "Unicode");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        writer.println(graphWiz);
+        writer.close();
     }
 }
