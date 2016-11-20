@@ -1,5 +1,6 @@
 package model;
 
+import Util.Util;
 import dawg.ModifiableDAWGNode;
 
 import java.util.ArrayList;
@@ -106,7 +107,7 @@ public class Game {
                     for (Character c : outgoingNodes.keySet()) {
                         if (currentTile.crosscheckContains(c, orientation)) {
                             int index;
-                            if ((index = getCurrentPlayer().getRack().contains(c.toString())) > -1) {
+                            if ((index = getCurrentPlayer().getRack().contains(c.toString())) > -1 || (index = getCurrentPlayer().getRack().containsWildcard()) > -1) {
                                 Letter letter = getCurrentPlayer().getRack().getLetters().get(index);
                                 getCurrentPlayer().getRack().getLetters().remove(index);
                                 ModifiableDAWGNode nextNode = outgoingNodes.get(c);
@@ -145,7 +146,7 @@ public class Game {
                 for (Character c : outgoingNodes.keySet()) {
                     if (currentTile.crosscheckContains(c, orientation)) {
                         int index;
-                        if ((index = getCurrentPlayer().getRack().contains(c.toString())) > -1) {
+                        if ((index = getCurrentPlayer().getRack().contains(c.toString())) > -1 || (index = getCurrentPlayer().getRack().containsWildcard()) > -1) {
                             Letter letter = getCurrentPlayer().getRack().getLetters().get(index);
                             getCurrentPlayer().getRack().getLetters().remove(index);
                             ModifiableDAWGNode nextNode = outgoingNodes.get(c);

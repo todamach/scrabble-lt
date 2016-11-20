@@ -39,6 +39,15 @@ public class Rack {
         return -1;
     }
 
+    public int containsWildcard() {
+        for (Letter rackLetter : letters) {
+            if (rackLetter.getLetter().equals("*")) {
+                return letters.indexOf(rackLetter);
+            }
+        }
+        return -1;
+    }
+
     @Override
     public String toString(){
         String rack = "";

@@ -14,6 +14,10 @@ public class LetterPool {
     }
 
     private void generateLetters() {
+        for(int i = 0; i < 2; i++){
+            pool.add(new Letter("*"));
+        }
+
         for(int i = 0; i < 12; i++){
             pool.add(new Letter("a"));
         }
