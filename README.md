@@ -4,15 +4,17 @@ Lietuviška scrabble versija. Šitoj repositorijoj back-endas.
 
 # todo
 
+taškų skaičiavimo atnaujinimas (su wildcards)
+
 išfiltruoti teorinius žodžius
 
 raidžių keitimas, kai neranda žodžio
 
-blank tiles
+~~blank tiles~~
 
 ~~pirmas žodis~~
 
-bugas, kai baigiasi raidės
+~~bugas, kai baigiasi raidės~~
 
 ~~score bonus for empty rack~~
 
