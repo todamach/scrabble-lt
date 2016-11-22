@@ -1,6 +1,9 @@
 package Util;
 
+import model.Letter;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -8,43 +11,7 @@ import java.util.List;
  */
 public class Util {
 
-    public static List<String> getAbc(){
-        List<String> abc = new ArrayList<>();
-        abc.add("a");
-        abc.add("à");
-        abc.add("b");
-        abc.add("c");
-        abc.add("è");
-        abc.add("d");
-        abc.add("e");
-        abc.add("æ");
-        abc.add("ë");
-        abc.add("f");
-        abc.add("g");
-        abc.add("h");
-        abc.add("i");
-        abc.add("á");
-        abc.add("y");
-        abc.add("j");
-        abc.add("k");
-        abc.add("l");
-        abc.add("m");
-        abc.add("n");
-        abc.add("o");
-        abc.add("p");
-        abc.add("r");
-        abc.add("d");
-        abc.add("ð");
-        abc.add("t");
-        abc.add("u");
-        abc.add("ø");
-        abc.add("û");
-        abc.add("v");
-        abc.add("z");
-        abc.add("þ");
-
-        return abc;
-    }
+    public static List<String> ABC = Arrays.asList("a","à","b","c","è","d","e","æ","ë","f","g","h","i","á","y","j","k","l","m","n","o","p","r","s","ð","t","u","ø","û","v","z","þ");
 
     public static int getLetterValue(String letter){
 
@@ -149,5 +116,14 @@ public class Util {
         }
 
         return value;
+    }
+
+    public static List<Letter> deepCopy(List<Letter> letters){
+        List<Letter> copyList = new ArrayList<>();
+        for(Letter letter : letters){
+            copyList.add(new Letter(letter));
+        }
+
+        return copyList;
     }
 }

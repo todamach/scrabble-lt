@@ -427,7 +427,7 @@ public class Board {
                 if (!letter.getLetter().isEmpty()) {
                     board += " " + letter.getLetter() + " ";
                 } else if (tile.isAnchor()) {
-                    board += " # ";
+                    board += "   ";
                 } else {
                     board += "   ";
                 }

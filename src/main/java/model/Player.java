@@ -73,12 +73,18 @@ public class Player {
                 System.out.println(legalWord);
                 Tile[][] boardOrientation = board.getBoard(legalWord.getOrientation());
                 int currentCol =  legalWord.getWordStart();
-                for(char letter : legalWord.getWord().toCharArray()){
+                for(Letter letter : legalWord.getPartialWord().getLetters()){
                     Tile tile = boardOrientation[legalWord.getAnchorRow()][currentCol];
                     if(tile.getLetter().getLetter().isEmpty()){
-                        tile.getLetter().setLetter(String.valueOf(letter));
+                        letter.setPlaced(true);
+                        tile.setLetter(letter);
+                        //tile.getLetter().setLetter(letter.getLetter());
                         tile.setAnchor(false);
-                        rack.remove(String.valueOf(letter));
+                        if(letter.isWildcard()){
+                            rack.remove("*");
+                        }else{
+                            rack.remove(letter.getLetter());
+                        }
                         wordPlaced = true;
                     }
                     currentCol++;
@@ -91,7 +97,7 @@ public class Player {
     }
 
     private boolean wordAndCrosschecksRealWords(LegalWord legalWord){
-        if(Annotator.checkWord(legalWord.getWord())){
+        if(Annotator.checkWord(legalWord.getPartialWord().getWord())){
             for(LegalWord.CrosscheckWord word : legalWord.getWordsToCrosscheck()){
                 if(!Annotator.checkWord(word.getWord())){
                     return false;
@@ -135,7 +141,7 @@ public class Player {
         this.score = score;
     }
 
-    public void addLegalWord(int anchorSquare, int anchorRow, String partialWord, int leftPartLength, Tile[][] board, int orientation){
+    public void addLegalWord(int anchorSquare, int anchorRow, PartialWord partialWord, int leftPartLength, Tile[][] board, int orientation){
         LegalWord legalWord = new LegalWord(anchorSquare, anchorRow, partialWord, leftPartLength, board, orientation, rack.getLetters().size());
 
         if(orientation == Board.HORIZONTAL){
@@ -153,13 +159,13 @@ public class Player {
 
     public void setTestRack() {
         rack.getLetters().add(new Letter("g"));
-        rack.getLetters().add(new Letter("i"));
-        rack.getLetters().add(new Letter("i"));
+        rack.getLetters().add(new Letter("h"));
+        rack.getLetters().add(new Letter("*"));
         rack.getLetters().add(new Letter("r"));
-        rack.getLetters().add(new Letter("u"));
+        rack.getLetters().add(new Letter("j"));
         rack.getLetters().add(new Letter("a"));
         rack.getLetters().add(new Letter("h"));
-        rack.getLetters().add(new Letter("a"));
+        rack.getLetters().add(new Letter("l"));
     }
 
     @Override

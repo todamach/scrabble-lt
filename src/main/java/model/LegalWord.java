@@ -8,22 +8,24 @@ import java.util.Map;
  * Created by harol on 10/23/2016.
  */
 public class LegalWord {
-    int anchorRow;
-    int anchorSquare;
-    String word;
-    List<CrosscheckWord> wordsToCrosscheck = new ArrayList<>();
-    int leftPartLength;
-    int wordValue;
-    int orientation;
-    int rackSize;
-    int wordStart;
+    private int anchorRow;
+    private int anchorSquare;
+    private PartialWord partialWord;
+    private List<CrosscheckWord> wordsToCrosscheck = new ArrayList<>();
+    private int leftPartLength;
+    private int wordValue;
+    private int orientation;
+    private int rackSize;
+    private int wordStart;
+
+
 
     public LegalWord(){}
 
-    public LegalWord(int anchorSquare, int anchorRow, String partialWord, int leftPartLength, Tile[][] board, int orientation, int rackSize) {
+    public LegalWord(int anchorSquare, int anchorRow, PartialWord partialWord, int leftPartLength, Tile[][] board, int orientation, int rackSize) {
         this.anchorRow = anchorRow;
         this.anchorSquare = anchorSquare;
-        this.word = partialWord;
+        this.partialWord = partialWord;
         this.leftPartLength = leftPartLength;
         this.orientation = orientation;
         this.rackSize = rackSize;
@@ -40,7 +42,7 @@ public class LegalWord {
         int totalValue = 0;
         int tripleWord = 0;
         int doubleWord = 0;
-        for(char c : word.toCharArray()){
+        for(char c : partialWord.getWord().toCharArray()){
             Tile tile = board[anchorRow][currentCol];
             if(tile.getLetter().getLetter().isEmpty()){
                 int value = Util.Util.getLetterValue(String.valueOf(c));
@@ -98,7 +100,7 @@ public class LegalWord {
     private void findCrosschecks(Tile[][] board) {
         int currentCol = anchorSquare - leftPartLength;
 
-        for(char c : word.toCharArray()){
+        for(char c : partialWord.getWord().toCharArray()){
             //if(currentCol != anchorSquare){
                 Tile tile = board[anchorRow][currentCol];
                 CrosscheckWord crosscheckWord = findCrosscheckWord(tile.getCrosschecks(orientation), c);
@@ -146,12 +148,12 @@ public class LegalWord {
         this.anchorSquare = anchorSquare;
     }
 
-    public String getWord() {
-        return word;
+    public PartialWord getPartialWord() {
+        return partialWord;
     }
 
-    public void setWord(String word) {
-        this.word = word;
+    public void setPartialWord(PartialWord partialWord) {
+        this.partialWord = partialWord;
     }
 
     public List<CrosscheckWord> getWordsToCrosscheck() {
@@ -172,7 +174,7 @@ public class LegalWord {
 
     @Override
     public String toString(){
-        String returnString = word + " " + anchorRow + " " + anchorSquare + " " + leftPartLength + " " + wordValue;
+        String returnString = partialWord + " " + anchorRow + " " + anchorSquare + " " + leftPartLength + " " + wordValue;
         for(CrosscheckWord crosscheckWord : wordsToCrosscheck){
             returnString += " " + crosscheckWord.getWord() + ",";
         }
