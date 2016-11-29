@@ -4,7 +4,9 @@ Lietuviška scrabble versija. Šitoj repositorijoj back-endas.
 
 # todo
 
-taškų skaičiavimo atnaujinimas (su wildcards)
+bonusas už visų raidžių atidavimą žaidimo pabaigoje
+
+~~taškų skaičiavimo atnaujinimas (su wildcards)~~
 
 išfiltruoti teorinius žodžius
 
