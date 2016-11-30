@@ -95,4 +95,14 @@ public class LetterPool {
     public void setPool(List<Letter> pool) {
         this.pool = pool;
     }
+
+    @Override
+    public String toString(){
+        String pool = "";
+
+        for(Letter letter : getPool()){
+            pool += letter.getLetter() + ", ";
+        }
+        return "" + getPool().size() + ", " + pool;
+    }
 }

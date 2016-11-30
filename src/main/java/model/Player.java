@@ -16,8 +16,10 @@ public class Player {
     List<LegalWord> legalWordsHorizontal = new ArrayList<>();
     List<LegalWord> legalWordsVertical = new ArrayList<>();
     int score;
+    Dawg dawg;
 
-    public Player(){
+    public Player(Dawg dawg){
+        this.dawg = dawg;
         rack = new Rack();
     }
 
@@ -141,6 +143,14 @@ public class Player {
         this.score = score;
     }
 
+    public Dawg getDawg() {
+        return dawg;
+    }
+
+    public void setDawg(Dawg dawg) {
+        this.dawg = dawg;
+    }
+
     public void addLegalWord(int anchorSquare, int anchorRow, PartialWord partialWord, int leftPartLength, Tile[][] board, int orientation){
         LegalWord legalWord = new LegalWord(anchorSquare, anchorRow, partialWord, leftPartLength, board, orientation, rack.getLetters().size());
 
@@ -170,6 +180,6 @@ public class Player {
 
     @Override
     public String toString(){
-        return "" + name + " " + score;
+        return "" + name + " " + score + " " + this.getRack();
     }
 }

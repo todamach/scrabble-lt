@@ -42,10 +42,10 @@ public class LegalWord {
         int totalValue = 0;
         int tripleWord = 0;
         int doubleWord = 0;
-        for(char c : partialWord.getWord().toCharArray()){
+        for(Letter letter : partialWord.getLetters()){
             Tile tile = board[anchorRow][currentCol];
-            if(tile.getLetter().getLetter().isEmpty()){
-                int value = Util.Util.getLetterValue(String.valueOf(c));
+            if(tile.getLetter().getLetter().isEmpty() && !letter.isWildcard()){
+                int value = Util.Util.getLetterValue(letter.getLetter());
                 switch(tile.getMultiplier()){
                     case Tile.DOUBLE_LETTER:
                         totalValue += value*2;

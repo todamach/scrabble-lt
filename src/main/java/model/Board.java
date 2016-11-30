@@ -399,7 +399,11 @@ public class Board {
                 Letter letter = board[row][col].getLetter();
                 Tile tile = board[row][col];
                 if (!letter.getLetter().isEmpty()) {
-                    boardString += " " + letter.getLetter() + " ";
+                    if(letter.isWildcard()){
+                        boardString += " * ";
+                    }else{
+                        boardString += " " + letter.getLetter() + " ";
+                    }
                 } else if (tile.isAnchor()) {
                     boardString += "   ";
                 } else {

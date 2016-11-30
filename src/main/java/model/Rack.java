@@ -7,7 +7,7 @@ import java.util.List;
  * Created by harol on 10/17/2016.
  */
 public class Rack {
-    public static final int SIZE = 8;
+    public static final int SIZE = 7;
     private List<Letter> letters = new ArrayList<>();
 
     public Rack() {
