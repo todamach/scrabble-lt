@@ -7,7 +7,7 @@ import java.util.List;
  * Created by harol on 10/30/2016.
  */
 public class LetterPool {
-    List<Letter> pool = new ArrayList<>();
+    private List<Letter> pool = new ArrayList<>();
 
     public LetterPool(){
         generateLetters();

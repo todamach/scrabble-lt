@@ -101,13 +101,14 @@ public class LegalWord {
         int currentCol = anchorSquare - leftPartLength;
 
         for(char c : partialWord.getWord().toCharArray()){
-            //if(currentCol != anchorSquare){
-                Tile tile = board[anchorRow][currentCol];
+
+            Tile tile = board[anchorRow][currentCol];
+            if(tile.getLetter().getLetter().isEmpty()){
                 CrosscheckWord crosscheckWord = findCrosscheckWord(tile.getCrosschecks(orientation), c);
 
                 if(crosscheckWord != null)
                     this.wordsToCrosscheck.add(crosscheckWord);
-            //}
+            }
             currentCol++;
         }
     }

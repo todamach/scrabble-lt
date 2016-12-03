@@ -19,6 +19,7 @@ public class MovesGenerator {
     private static int limit = 0;
 
     private static int turn = 1;
+    private static boolean testing = true;
 
     Player currentPlayer;
     Board board;
@@ -43,7 +44,7 @@ public class MovesGenerator {
     }
 
     private void generateMoves(Tile[][] currentOrientation){
-        if(turn == 1){
+        if(!testing && turn == 1){
             anchorSquare = 7;
             currentCol = 7;
             anchorRow = 7;

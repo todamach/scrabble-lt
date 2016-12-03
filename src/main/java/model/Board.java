@@ -25,6 +25,7 @@ public class Board {
 
     public Board() {
         setHorizontalBoard(generateEmptyBoard());
+        readFromFile();
         generateVerticalBoard();
     }
 
@@ -322,7 +323,6 @@ public class Board {
                                     } else if (orientation == HORIZONTAL) {
                                         tile.addHorizontalCrosscheck(crosscheck, String.valueOf(c));
                                     }
-
                                 }
                             }
                         }

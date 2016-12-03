@@ -63,13 +63,13 @@ public class Player {
         Collections.sort(legalWordsVertical, descWordValue);
     }
 
-    public boolean placeBestScoringWordOnTheBoard(Board board) {
+    public LegalWord placeBestScoringWordOnTheBoard(Board board) {
+        LegalWord legalWordPlaced = null;
         List<LegalWord> legalWordsMerged = new ArrayList<>();
         legalWordsMerged.addAll(legalWordsHorizontal);
         legalWordsMerged.addAll(legalWordsVertical);
 
         Collections.sort(legalWordsMerged, descWordValue);
-        boolean wordPlaced = false;
         for(LegalWord legalWord : legalWordsMerged){
             if(wordAndCrosschecksRealWords(legalWord)){
                 System.out.println(legalWord);
@@ -80,14 +80,13 @@ public class Player {
                     if(tile.getLetter().getLetter().isEmpty()){
                         letter.setPlaced(true);
                         tile.setLetter(letter);
-                        //tile.getLetter().setLetter(letter.getLetter());
                         tile.setAnchor(false);
                         if(letter.isWildcard()){
                             rack.remove("*");
                         }else{
                             rack.remove(letter.getLetter());
                         }
-                        wordPlaced = true;
+                        legalWordPlaced = legalWord;
                     }
                     currentCol++;
                 }
@@ -95,10 +94,13 @@ public class Player {
                 break;
             }
         }
-        return wordPlaced;
+        return legalWordPlaced;
     }
 
     private boolean wordAndCrosschecksRealWords(LegalWord legalWord){
+        if(getDawg().getMode().equals(Dawg.HARD)){
+            return true;
+        }
         if(Annotator.checkWord(legalWord.getPartialWord().getWord())){
             for(LegalWord.CrosscheckWord word : legalWord.getWordsToCrosscheck()){
                 if(!Annotator.checkWord(word.getWord())){
@@ -168,14 +170,13 @@ public class Player {
     }
 
     public void setTestRack() {
-        rack.getLetters().add(new Letter("g"));
-        rack.getLetters().add(new Letter("h"));
-        rack.getLetters().add(new Letter("*"));
-        rack.getLetters().add(new Letter("r"));
-        rack.getLetters().add(new Letter("j"));
+        rack.getLetters().add(new Letter("i"));
+        rack.getLetters().add(new Letter("i"));
+        rack.getLetters().add(new Letter("i"));
         rack.getLetters().add(new Letter("a"));
-        rack.getLetters().add(new Letter("h"));
-        rack.getLetters().add(new Letter("l"));
+        rack.getLetters().add(new Letter("m"));
+        rack.getLetters().add(new Letter("r"));
+        rack.getLetters().add(new Letter("e"));
     }
 
     @Override

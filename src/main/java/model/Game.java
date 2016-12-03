@@ -3,9 +3,7 @@ package model;
 import Util.Util;
 import dawg.ModifiableDAWGNode;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NavigableMap;
+import java.util.*;
 
 /**
  * Created by harol on 10/19/2016.
@@ -16,13 +14,21 @@ public class Game {
     LetterPool pool;
     List<Player> players = new ArrayList<>();
     MovesGenerator movesGenerator;
+    Map<String, Dawg> dawgsMap = new HashMap<>();
+
 
     int currentPlayer = 0;
 
     public Game() {
+        System.out.println("Creating LetterPool..");
         pool = new LetterPool();
+        System.out.println("Creating Board..");
         board = new Board();
+        System.out.println("Creating MovesGenerator..");
         movesGenerator = new MovesGenerator();
+        System.out.println("Creating dawgs..");
+        createDawgs();
+        System.out.println("Creating players..");
         createPlayers();
     }
 
@@ -36,14 +42,30 @@ public class Game {
 
             generateMoves();
             getCurrentPlayer().sortLegalWordsByValue();
-            getCurrentPlayer().placeBestScoringWordOnTheBoard(getBoard());
-
+            //LegalWord wordPlaced = getCurrentPlayer().placeBestScoringWordOnTheBoard(getBoard());
+            //updateDawgsWithNewWord(wordPlaced);
             System.out.println("Game state");
             printGameState();
 
             getCurrentPlayer().clearLegalWords();
             getCurrentPlayer().drawLetters(getPool());
-            nextPlayer();
+            //nextPlayer();
+        }
+    }
+
+    private void updateDawgsWithNewWord(LegalWord word) {
+        for(Player player : players){
+            if(getCurrentPlayer() != player){
+                if(!player.getDawg().getDawg().contains(word.getPartialWord().getWord())){
+                    player.getDawg().getDawg().add(word.getPartialWord().getWord());
+                }
+                for(LegalWord.CrosscheckWord crosscheck : word.getWordsToCrosscheck()){
+                    if(!player.getDawg().getDawg().contains(crosscheck.getWord())){
+                        player.getDawg().getDawg().add(crosscheck.getWord());
+                    }
+                }
+
+            }
         }
     }
 
@@ -51,24 +73,36 @@ public class Game {
         movesGenerator.generateMoves(getCurrentPlayer(), board);
     }
 
+    private void createDawgs(){
+        Dawg dawg15 = new Dawg(Dawg.EASY);
+        //Dawg dawg800 = new Dawg(Dawg.HARD);
+        dawg15.getDawg().add("strëlikæ");
+        dawg15.getDawg().add("dëkoji");
+        dawg15.getDawg().add("sugëræs");
+        dawg15.getDawg().add("gajais");
+
+        dawgsMap.put(Dawg.EASY, dawg15);
+        //dawgsMap.put(Dawg.HARD, dawg800);
+
+    }
+
     private void createPlayers(){
         Player player1;
         Player player2;
 
-        Dawg dawg = new Dawg();
+        player1 = new Player(dawgsMap.get(Dawg.EASY));
+        player1.setName("Amateur");
+        //player1.drawLetters(getPool());
+        player1.setTestRack();
 
-        player1 = new Player(dawg);
-        player1.setName("Player1");
-        player1.drawLetters(getPool());
-        //player1.setTestRack();
-
-        player2 = new Player(dawg);
-        player2.setName("Player2");
+        player2 = new Player(dawgsMap.get(Dawg.EASY));
+        player2.setName("Pro");
         player2.drawLetters(getPool());
         //player2.setTestRack();
 
         addPlayer(player1);
         addPlayer(player2);
+
     }
 
     public List<Player> getPlayers() {
@@ -110,7 +144,6 @@ public class Game {
             currentPlayer = 0;
         }
     }
-
 
     public void printGameState() {
         System.out.println(Board.printBoardLetters(this.getBoard().getHorizontalBoard()));

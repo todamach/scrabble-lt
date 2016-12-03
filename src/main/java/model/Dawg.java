@@ -8,9 +8,21 @@ import java.io.*;
  * Created by harol on 10/19/2016.
  */
 public class Dawg {
-    ModifiableDAWGSet dawg;
+    public static final String EASY = "easy";
+    public static final String HARD = "hard";
 
-    public Dawg(){
+    ModifiableDAWGSet dawg;
+    private String path;
+
+    private String mode;
+
+    public Dawg(String mode){
+        this.mode = mode;
+        if(mode.equals(EASY)){
+            path = "D:\\Projektai\\Intellij\\DAWG programa\\src\\main\\resources\\15klt.txt";
+        }else if(mode.equals(HARD)){
+            path = "D:\\Projektai\\Intellij\\DAWG programa\\src\\main\\resources\\800klt.txt";
+        }
         dawg = readDAWGFromFile();
        // writeDAWGToGraphWiz(dawg);
     }
@@ -26,7 +38,7 @@ public class Dawg {
     private ModifiableDAWGSet readDAWGFromFile() {
         ModifiableDAWGSet dawg = new ModifiableDAWGSet();
 
-        String path = "D:\\Projektai\\Intellij\\DAWG programa\\src\\main\\resources\\15klt.txt";
+
         //String path = "D:\\Projektai\\Intellij\\DAWG programa\\src\\main\\resources\\test.txt";
         File file = new File(path);
 
@@ -58,5 +70,13 @@ public class Dawg {
         }
         writer.println(graphWiz);
         writer.close();
+    }
+
+    public String getMode() {
+        return mode;
+    }
+
+    public void setMode(String mode) {
+        this.mode = mode;
     }
 }
