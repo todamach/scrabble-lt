@@ -52,7 +52,6 @@ public class Player {
         descWordValue = new Comparator<LegalWord>(){
             @Override
             public int compare(LegalWord l1, LegalWord l2){
-                // Java 7 has an Integer#compare function
                 return Integer.compare(l2.getWordValue(), l1.getWordValue());
             }
         };

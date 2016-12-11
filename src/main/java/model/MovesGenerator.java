@@ -19,22 +19,22 @@ public class MovesGenerator {
     private static int limit = 0;
 
     private static int turn = 1;
-    private static boolean testing = true;
+    private static boolean skipFirstTurn = false;
 
     Player currentPlayer;
     Board board;
 
-    public MovesGenerator(){
+    public MovesGenerator() {
     }
 
-    public void generateMoves(Player player, Board board){
+    public void generateMoves(Player player, Board board) {
         this.currentPlayer = player;
         this.board = board;
         generateMoves();
         turn++;
     }
 
-    private void generateMoves(){
+    private void generateMoves() {
         currentOrientation = board.getHorizontalBoard();
         orientation = Board.HORIZONTAL;
         generateMoves(currentOrientation);
@@ -43,14 +43,14 @@ public class MovesGenerator {
         generateMoves(currentOrientation);
     }
 
-    private void generateMoves(Tile[][] currentOrientation){
-        if(!testing && turn == 1){
+    private void generateMoves(Tile[][] currentOrientation) {
+        if (!skipFirstTurn && turn == 1) {
             anchorSquare = 7;
             currentCol = 7;
             anchorRow = 7;
             limit = board.findLimit(currentOrientation, anchorRow, anchorSquare, currentPlayer.getRack());
             leftPart(new PartialWord(), currentPlayer.getDawg().getDawg().sourceNode, limit);
-        }else {
+        } else {
             for (int row = 0; row <= Board.ROWS - 1; row++) {
                 anchorRow = row;
                 for (int col = 0; col <= Board.COLS - 1; col++) {
@@ -67,10 +67,10 @@ public class MovesGenerator {
 
     private void leftPart(PartialWord partialWord, ModifiableDAWGNode node, int currentLimit) {
 
-        if(currentCol == 0){
+        if (anchorSquare == 0) {
             PartialWord newPartialWord = new PartialWord(partialWord);
             extendRight(newPartialWord, node, anchorSquare, partialWord.getLetters().size());
-        }else{
+        } else {
             currentCol = anchorSquare - 1;
             List<Letter> leftPart = new ArrayList<>();
             // Jeigu iskarto pries anchorSquare yra raide, tai imam visas raides iki pradzios, ir nebeieskom daugiau jokiu left parts
@@ -92,7 +92,7 @@ public class MovesGenerator {
                     nextNode = nextNode.getOutgoingTransitions().get(c);
                 }
                 //System.out.println("Left part: " + partialWord);
-                if(nextNode != null){
+                if (nextNode != null) {
                     PartialWord newPartialWord = new PartialWord(partialWord);
                     extendRight(newPartialWord, nextNode, anchorSquare, partialWord.getLetters().size());
                 }
@@ -102,29 +102,26 @@ public class MovesGenerator {
                 extendRight(newPartialWord, node, anchorSquare, partialWord.getLetters().size());
                 if (currentLimit > 0) {
                     NavigableMap<Character, ModifiableDAWGNode> outgoingNodes = node.getOutgoingTransitions();
-                    currentTile = currentOrientation[anchorRow][anchorSquare - (limit - (currentLimit - 1))];
 
                     for (Character c : outgoingNodes.keySet()) {
-                        if (currentTile.crosscheckContains(c, orientation)) {
-                            ModifiableDAWGNode nextNode = outgoingNodes.get(c);
-                            int index;
-                            if ((index = currentPlayer.getRack().contains(c.toString())) > -1) {
-                                Letter letter = currentPlayer.getRack().getLetters().get(index);
-                                currentPlayer.getRack().getLetters().remove(index);
-                                newPartialWord = new PartialWord(partialWord);
-                                newPartialWord.addChar(c);
-                                leftPart(newPartialWord, nextNode, currentLimit - 1);
-                                currentPlayer.getRack().getLetters().add(letter);
-                            }else if((index = containsWildcardAndLetterABC(c)) > -1){
-                                Letter letter = currentPlayer.getRack().getLetters().get(index);
-                                currentPlayer.getRack().getLetters().remove(index);
-                                newPartialWord = new PartialWord(partialWord);
-                                Letter newLetter = new Letter(c);
-                                newLetter.setWildcard(true);
-                                newPartialWord.addLetter(newLetter);
-                                leftPart(newPartialWord, nextNode, currentLimit - 1);
-                                currentPlayer.getRack().getLetters().add(letter);
-                            }
+                        ModifiableDAWGNode nextNode = outgoingNodes.get(c);
+                        int index;
+                        if ((index = currentPlayer.getRack().contains(c.toString())) > -1) {
+                            Letter letter = currentPlayer.getRack().getLetters().get(index);
+                            currentPlayer.getRack().getLetters().remove(index);
+                            newPartialWord = new PartialWord(partialWord);
+                            newPartialWord.addChar(c);
+                            leftPart(newPartialWord, nextNode, currentLimit - 1);
+                            currentPlayer.getRack().getLetters().add(letter);
+                        } else if ((index = containsWildcardAndLetterABC(c)) > -1) {
+                            Letter letter = currentPlayer.getRack().getLetters().get(index);
+                            currentPlayer.getRack().getLetters().remove(index);
+                            newPartialWord = new PartialWord(partialWord);
+                            Letter newLetter = new Letter(c);
+                            newLetter.setWildcard(true);
+                            newPartialWord.addLetter(newLetter);
+                            leftPart(newPartialWord, nextNode, currentLimit - 1);
+                            currentPlayer.getRack().getLetters().add(letter);
                         }
                     }
                 }
@@ -134,13 +131,13 @@ public class MovesGenerator {
 
     private void extendRight(PartialWord partialWord, ModifiableDAWGNode node, int square, int leftPartLength) {
         if (square > anchorSquare && node.isAcceptNode()) {
-            if(square < currentOrientation[anchorRow].length){
+            if (square < currentOrientation[anchorRow].length) {
                 Tile nextTile = currentOrientation[anchorRow][square];
-                if(nextTile.getLetter().getLetter().isEmpty()){
+                if (nextTile.getLetter().getLetter().isEmpty()) {
                     PartialWord newPartialWord = new PartialWord(partialWord);
                     currentPlayer.addLegalWord(anchorSquare, anchorRow, newPartialWord, leftPartLength, currentOrientation, orientation);
                 }
-            }else{
+            } else {
                 PartialWord newPartialWord = new PartialWord(partialWord);
                 currentPlayer.addLegalWord(anchorSquare, anchorRow, newPartialWord, leftPartLength, currentOrientation, orientation);
             }
@@ -150,9 +147,9 @@ public class MovesGenerator {
             // jei laukelis tuscias
             if (currentTile.getLetter().getLetter().isEmpty()) {
                 NavigableMap<Character, ModifiableDAWGNode> outgoingNodes = null;
-                try{
+                try {
                     outgoingNodes = node.getOutgoingTransitions();
-                }catch(Exception e){
+                } catch (Exception e) {
                     System.out.println();
                 }
 
@@ -169,7 +166,7 @@ public class MovesGenerator {
                             newPartialWord.addChar(c);
                             extendRight(newPartialWord, nextNode, nextSquare, leftPartLength);
                             currentPlayer.getRack().getLetters().add(letter);
-                        }else if((index = containsWildcardAndLetterABC(c)) > -1){
+                        } else if ((index = containsWildcardAndLetterABC(c)) > -1) {
                             Letter letter = currentPlayer.getRack().getLetters().get(index);
                             currentPlayer.getRack().getLetters().remove(index);
                             int nextSquare = square + 1;
@@ -203,10 +200,10 @@ public class MovesGenerator {
         }
     }
 
-    private int containsWildcardAndLetterABC(Character letter){
+    private int containsWildcardAndLetterABC(Character letter) {
         int index;
-        if((index = currentPlayer.getRack().containsWildcard()) > -1){
-            if(Util.ABC.contains(String.valueOf(letter))){
+        if ((index = currentPlayer.getRack().containsWildcard()) > -1) {
+            if (Util.ABC.contains(String.valueOf(letter))) {
                 return index;
             }
         }

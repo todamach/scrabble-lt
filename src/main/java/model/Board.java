@@ -25,7 +25,7 @@ public class Board {
 
     public Board() {
         setHorizontalBoard(generateEmptyBoard());
-        readFromFile();
+        //readFromFile();
         generateVerticalBoard();
     }
 
@@ -249,11 +249,10 @@ public class Board {
             for (int col = 0; col <= Board.COLS - 1; col++) {
                 if (board[row][col].isAnchor()) {
                     Tile tile = board[row][col];
-                    if (allCrosschecks(board, row, col)) {
+                    if (bothSidesEmpty(board, row, col)) {
                         // jeigu langeliai virs ir po tile yra tusti, tai visi crosschekai galimi
                         tile.setAllCrosschecks(true, orientation);
                     } else {
-                        //System.out.println("Find crosscheck for " + row + " " + col);
                         String topPart = "";
                         int currentRow = row - 1;
 
@@ -307,7 +306,7 @@ public class Board {
                                         foundLastNode = false;
                                         break;
                                     }
-                                    // eit iki apacios, gal visai neit, ir tikrint ar apacia yra accepted node.
+
                                     bottomPart += bottomTileChar;
                                     currentRow++;
                                 }
@@ -332,7 +331,7 @@ public class Board {
         }
     }
 
-    private boolean allCrosschecks(Tile[][] board, int row, int col) {
+    private boolean bothSidesEmpty(Tile[][] board, int row, int col) {
         if (row == 0) {
             if (board[row + 1][col].getLetter().getLetter().isEmpty()) {
                 return true;
@@ -444,7 +443,9 @@ public class Board {
 
     public int findLimit(Tile[][] board, int anchorRow, int anchorSquare, Rack rack) {
         int limit = -1;
-        while (anchorSquare >= 0 && board[anchorRow][anchorSquare].getLetter().getLetter().isEmpty()) {
+        while (anchorSquare >= 0
+                && board[anchorRow][anchorSquare].getLetter().getLetter().isEmpty()
+                && !board[anchorRow][anchorSquare].isAnchor()) {
             if (anchorSquare - 1 >= 0 && board[anchorRow][anchorSquare - 1].getLetter().getLetter().isEmpty()) {
                 limit++;
             }

@@ -11,6 +11,9 @@ public class Dawg {
     public static final String EASY = "easy";
     public static final String HARD = "hard";
 
+    public static final String PATH_15k = "D:\\Projektai\\Intellij\\DAWG programa\\src\\main\\resources\\15klt.txt";
+    public static final String PATH_800k = "D:\\Projektai\\Intellij\\DAWG programa\\src\\main\\resources\\800k_be_vardu.txt";
+
     ModifiableDAWGSet dawg;
     private String path;
 
@@ -19,9 +22,9 @@ public class Dawg {
     public Dawg(String mode){
         this.mode = mode;
         if(mode.equals(EASY)){
-            path = "D:\\Projektai\\Intellij\\DAWG programa\\src\\main\\resources\\15klt.txt";
+            path = PATH_15k;
         }else if(mode.equals(HARD)){
-            path = "D:\\Projektai\\Intellij\\DAWG programa\\src\\main\\resources\\800klt.txt";
+            path = PATH_800k;
         }
         dawg = readDAWGFromFile();
        // writeDAWGToGraphWiz(dawg);
@@ -38,8 +41,6 @@ public class Dawg {
     private ModifiableDAWGSet readDAWGFromFile() {
         ModifiableDAWGSet dawg = new ModifiableDAWGSet();
 
-
-        //String path = "D:\\Projektai\\Intellij\\DAWG programa\\src\\main\\resources\\test.txt";
         File file = new File(path);
 
         try (BufferedReader in = new BufferedReader(new InputStreamReader(
